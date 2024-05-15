@@ -1,4 +1,4 @@
-# my-vue-project
+# cdmn-research
 
 ## Project setup
 ```
