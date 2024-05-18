@@ -2,26 +2,40 @@
   <div>
     <h2>Column Types</h2>
     <form @submit.prevent="addColumnType">
-      <input v-model="newColumnType.name" placeholder="Name" required />
-      <input v-model="newColumnType.dataType" placeholder="Data Type" required />
-      <button type="submit">Add Column Type</button>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Data Type</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><input v-model="newColumnType.name" placeholder="Name" required /></td>
+            <td><input v-model="newColumnType.dataType" placeholder="Data Type" required /></td>
+            <td><button type="submit">Add Column Type</button></td>
+          </tr>
+          <tr v-for="(type, index) in columnTypes" :key="index">
+            <td>{{ type.name }}</td>
+            <td>{{ type.dataType }}</td>
+            <td><button @click="removeColumnType(index)">Remove</button></td>
+          </tr>
+        </tbody>
+      </table>
     </form>
-    <ul>
-      <li v-for="(type, index) in columnTypes" :key="index">
-        {{ type.name }} ({{ type.dataType }})
-        <button @click="removeColumnType(index)">Remove</button>
-      </li>
-    </ul>
   </div>
 </template>
 
 <script>
+import { saveToLocalStorage, loadFromLocalStorage } from '@/utils/storage';
+
 export default {
   name: 'ColumnTypes',
   data() {
     return {
       newColumnType: { name: '', dataType: '' },
-      columnTypes: []
+      columnTypes: loadFromLocalStorage('columnTypes') || []
     };
   },
   methods: {
@@ -29,9 +43,11 @@ export default {
       this.columnTypes.push({ ...this.newColumnType });
       this.newColumnType.name = '';
       this.newColumnType.dataType = '';
+      saveToLocalStorage('columnTypes', this.columnTypes);
     },
     removeColumnType(index) {
       this.columnTypes.splice(index, 1);
+      saveToLocalStorage('columnTypes', this.columnTypes);
     }
   }
 };
@@ -49,7 +65,6 @@ input {
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
-  width: 300px;
 }
 
 button {
@@ -59,31 +74,6 @@ button {
   color: white;
   border-radius: 5px;
   cursor: pointer;
-  width: 320px;
 }
-
-ul {
-  list-style: none;
-  padding: 0;
-}
-
-li {
-  display: flex;
-  justify-content: space-between;
-  padding: 10px;
-  background-color: #f0f0f0;
-  border-radius: 5px;
-  margin-bottom: 10px;
-}
-
-li button {
-  background-color: #e74c3c;
-  padding: 5px 10px;
-  border: none;
-  border-radius: 5px;
-  color: white;
-  cursor: pointer;
-}
-
 
 </style>

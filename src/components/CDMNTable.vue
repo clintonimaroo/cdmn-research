@@ -2,64 +2,94 @@
   <div>
     <h2>CDMN Table</h2>
     <form @submit.prevent="addRow">
-      <div v-for="(column, index) in columns" :key="index">
-        <input v-model="newRow[column]" :placeholder="column" />
-      </div>
-      <button type="submit">Add Row</button>
+      <table>
+        <thead>
+          <tr>
+            <th v-for="(column, index) in columns" :key="index" :class="getColumnClass(index)">{{ column }}</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td v-for="(column, index) in columns" :key="index"><input v-model="newRow[column]" :placeholder="column" />
+            </td>
+            <td><button type="submit">Add Row</button></td>
+          </tr>
+          <tr v-for="(row, index) in rows" :key="index">
+            <td v-for="column in columns" :key="column">{{ row[column] }}</td>
+            <td><button @click="removeRow(index)">Remove</button></td>
+          </tr>
+        </tbody>
+      </table>
     </form>
-    <table>
-      <thead>
-        <tr>
-          <th v-for="column in columns" :key="column">{{ column }}</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="(row, index) in rows" :key="index">
-          <td v-for="column in columns" :key="column">{{ row[column] }}</td>
-          <td>
-            <button @click="removeRow(index)">Remove</button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
   </div>
 </template>
 
 <script>
+import { saveToLocalStorage, loadFromLocalStorage } from '@/utils/storage';
+
 export default {
   name: 'CDMNTable',
   data() {
     return {
       columns: ['Column1', 'Column2'], // Replace with dynamic columns if needed
       newRow: {},
-      rows: []
+      rows: loadFromLocalStorage('rows') || []
     };
   },
   methods: {
     addRow() {
       this.rows.push({ ...this.newRow });
       this.newRow = {};
+      saveToLocalStorage('rows', this.rows);
     },
     removeRow(index) {
       this.rows.splice(index, 1);
+      saveToLocalStorage('rows', this.rows);
+    },
+    getColumnClass(index) {
+      return index % 2 === 0 ? 'column-even' : 'column-odd';
     }
   }
 };
 </script>
 
 <style scoped>
-form {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 20px;
-  gap: 10px;
+th {
+  color: #333;
 }
 
-input {
+.column-even {
+  background-color: #b5d7a8;
+}
+
+.column-odd {
+  background-color: #cfe1f3;
+}
+
+table {
+  width: 80%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+th,
+td {
   padding: 10px;
   border: 1px solid #ccc;
-  border-radius: 5px;
+  text-align: left;
+}
+
+td input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  box-sizing: border-box;
+}
+
+tr:nth-child(even) td {
+  background-color: #f9f9f9;
 }
 
 button {
@@ -71,24 +101,12 @@ button {
   cursor: pointer;
 }
 
-table {
-  width: 100%;
-  border-collapse: collapse;
-  }
-  
-  th,
-  td {
-    border: 1px solid #ccc;
-    padding: 10px;
-    text-align: left;
-  }
-  
-  td button {
-    background-color: #e74c3c;
-    padding: 5px 10px;
-    border: none;
-    border-radius: 5px;
-    color: white;
-    cursor: pointer;
-  }
+td button {
+  background-color: #e74c3c;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  cursor: pointer;
+}
 </style>

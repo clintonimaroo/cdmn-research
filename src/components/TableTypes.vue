@@ -2,31 +2,49 @@
   <div>
     <h2>Table Types</h2>
     <form @submit.prevent="addTableType">
-      <input v-model="newTableType.name" placeholder="Name" required />
-      <select v-model="newTableType.fixed">
-        <option value="true">Fixed</option>
-        <option value="false">Variable</option>
-      </select>
-      <input v-if="newTableType.fixed === 'true'" v-model="newTableType.columns" placeholder="Number of Columns"
-        type="number" min="1" required />
-      <button type="submit">Add Table Type</button>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Fixed/Variable</th>
+            <th>Columns (if Fixed)</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><input v-model="newTableType.name" placeholder="Name" required /></td>
+            <td>
+              <select v-model="newTableType.fixed">
+                <option value="true">Fixed</option>
+                <option value="false">Variable</option>
+              </select>
+            </td>
+            <td><input v-if="newTableType.fixed === 'true'" v-model="newTableType.columns"
+                placeholder="Number of Columns" type="number" min="1" required /></td>
+            <td><button type="submit">Add Table Type</button></td>
+          </tr>
+          <tr v-for="(type, index) in tableTypes" :key="index">
+            <td>{{ type.name }}</td>
+            <td>{{ type.fixed ? 'Fixed' : 'Variable' }}</td>
+            <td>{{ type.fixed ? type.columns : 'N/A' }}</td>
+            <td><button @click="removeTableType(index)">Remove</button></td>
+          </tr>
+        </tbody>
+      </table>
     </form>
-    <ul>
-      <li v-for="(type, index) in tableTypes" :key="index">
-        {{ type.name }} ({{ type.fixed ? 'Fixed' : 'Variable' }})
-        <button @click="removeTableType(index)">Remove</button>
-      </li>
-    </ul>
   </div>
 </template>
 
 <script>
+import { saveToLocalStorage, loadFromLocalStorage } from '@/utils/storage';
+
 export default {
   name: 'TableTypes',
   data() {
     return {
       newTableType: { name: '', fixed: 'true', columns: '' },
-      tableTypes: []
+      tableTypes: loadFromLocalStorage('tableTypes') || []
     };
   },
   methods: {
@@ -35,58 +53,19 @@ export default {
       this.newTableType.name = '';
       this.newTableType.fixed = 'true';
       this.newTableType.columns = '';
+      saveToLocalStorage('tableTypes', this.tableTypes);
     },
     removeTableType(index) {
       this.tableTypes.splice(index, 1);
+      saveToLocalStorage('tableTypes', this.tableTypes);
     }
   }
 };
 </script>
 
 <style scoped>
-form {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 20px;
-  gap: 10px;
-}
-
-input,
-select {
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
-
-button {
-  padding: 10px 20px;
-  border: none;
-  background-color: #42b983;
-  color: white;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-ul {
-  list-style: none;
-  padding: 0;
-}
-
-li {
-  display: flex;
-  justify-content: space-between;
-  padding: 10px;
-  background-color: #f0f0f0;
-  border-radius: 5px;
-  margin-bottom: 10px;
-}
-
-li button {
-  background-color: #e74c3c;
-  padding: 5px 10px;
-  border: none;
-  border-radius: 5px;
-  color: white;
-  cursor: pointer;
+th {
+  background-color: #eb9ba4;
+  color: #333;
 }
 </style>
