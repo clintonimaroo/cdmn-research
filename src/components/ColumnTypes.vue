@@ -49,6 +49,7 @@ input {
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
+  width: 300px;
 }
 
 button {
@@ -58,6 +59,7 @@ button {
   color: white;
   border-radius: 5px;
   cursor: pointer;
+  width: 320px;
 }
 
 ul {
@@ -82,4 +84,6 @@ li button {
   color: white;
   cursor: pointer;
 }
+
+
 </style>
