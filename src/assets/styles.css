@@ -104,9 +104,9 @@ tr:nth-child(even) td {
 button {
     padding: 10px 20px;
     border: none;
-    background-color: #42b983;
+    background-color: #000000;
     color: white;
-    border-radius: 5px;
+    border-radius: 100px;
     cursor: pointer;
 }
 
@@ -206,4 +206,46 @@ footer {
     td button {
         width: 100%;
     }
+}
+
+
+.info-button {
+    padding: 0;
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    background: #e8e8ed;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: auto;
+
+}
+
+.info-button-gif {
+    width: 50%;
+    height: 50%;
+    display: inline-block;
+}
+
+.peek-view-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    z-index: 1000;
+}
+
+.peek-view {
+    background-color: #fff;
+    padding: 20px;
+    width: 400px;
+    height: 100%;
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.2);
+    overflow-y: auto;
 }
