@@ -6,14 +6,13 @@
         <thead>
           <tr>
             <th v-for="(column, index) in columns" :key="index" :class="getColumnClass(index)">{{ column }}</th>
-            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td v-for="(column, index) in columns" :key="index"><input v-model="newRow[column]" :placeholder="column" />
+            <td v-for="(column, index) in columns" :key="index">
+              <input v-model="newRow[column]" :placeholder="column" />
             </td>
-            <td><button type="submit">Add Row</button></td>
           </tr>
           <tr v-for="(row, index) in rows" :key="index">
             <td v-for="column in columns" :key="column">{{ row[column] }}</td>
@@ -21,6 +20,7 @@
           </tr>
         </tbody>
       </table>
+      <button type="submit" class="add-row-button">Add Row</button>
     </form>
   </div>
 </template>
@@ -32,7 +32,7 @@ export default {
   name: 'CDMNTable',
   data() {
     return {
-      columns: ['Column1', 'Column2'], // Replace with dynamic columns if needed
+      columns: ['Column1', 'Column2', 'Column3'],
       newRow: {},
       rows: loadFromLocalStorage('rows') || []
     };
@@ -99,6 +99,7 @@ button {
   color: white;
   border-radius: 5px;
   cursor: pointer;
+  margin: 10px 0;
 }
 
 td button {
@@ -108,5 +109,9 @@ td button {
   border-radius: 5px;
   color: white;
   cursor: pointer;
+}
+
+.add-row-button {
+  margin-top: 10px;
 }
 </style>
