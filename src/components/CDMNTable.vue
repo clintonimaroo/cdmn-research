@@ -13,14 +13,14 @@
             <td v-for="(column, index) in columns" :key="index">
               <input v-model="newRow[column]" :placeholder="column" />
             </td>
+            <td><button type="submit" class="add-row-button">+</button></td>
           </tr>
           <tr v-for="(row, index) in rows" :key="index">
             <td v-for="column in columns" :key="column">{{ row[column] }}</td>
-            <td><button @click="removeRow(index)">Remove</button></td>
+            <td><button class="remove" @click="removeRow(index)">x</button></td>
           </tr>
         </tbody>
       </table>
-      <button type="submit" class="add-row-button">Add Row</button>
     </form>
   </div>
 </template>
@@ -32,7 +32,7 @@ export default {
   name: 'CDMNTable',
   data() {
     return {
-      columns: ['Column1', 'Column2', 'Column3'],
+      columns: ['Name', 'Age', 'Salary'], // Define three columns
       newRow: {},
       rows: loadFromLocalStorage('rows') || []
     };
@@ -68,7 +68,7 @@ th {
 }
 
 table {
-  width: 80%;
+  width: 100%;
   border-collapse: collapse;
   margin-bottom: 20px;
 }
@@ -103,15 +103,30 @@ button {
 }
 
 td button {
-  background-color: #e74c3c;
-  padding: 5px 10px;
-  border: none;
-  border-radius: 5px;
-  color: white;
-  cursor: pointer;
+    padding: 5px 10px;
+    border: none;
+    background-color: transparent;
+    color: #000000;
+    font-size: 15px;
+    cursor: pointer;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .add-row-button {
-  margin-top: 10px;
+  padding: 5px 10px;
+  border: none;
+  background-color: transparent;
+  color: #000000;
+  font-size: 15px;
+  cursor: pointer;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
+
+
 </style>
