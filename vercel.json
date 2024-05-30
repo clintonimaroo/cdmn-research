@@ -1,9 +1,0 @@
-{
-  "version": 2,
-  "builds": [
-    { "src": "api/sendInvitation.js", "use": "@vercel/node" }
-  ],
-  "routes": [
-    { "src": "/api/sendInvitation", "dest": "api/sendInvitation.js" }
-  ]
-}
