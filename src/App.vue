@@ -3,7 +3,7 @@
     <nav>
       <router-link to="/column-types">+ Column Types</router-link>
       <router-link to="/table-types">+ Table Types</router-link>
-      <router-link :to="`/cdmn-table/${currentCDMNId}`">+ CDMN Table</router-link>
+      <router-link :to="{ name: 'cdmn-table', params: { cdmnId: 'your-dynamic-cdmn-id' } }">+ CDMN Table</router-link>
       <button class="info-button" @click="showPeekView = true">
         <img src="@/assets/info.png" alt="What's CDMN?" class="info-button-gif" />
       </button>
@@ -12,7 +12,7 @@
       </button>
     </nav>
     <div class="container">
-      <router-view :cdmnId="currentCDMNId"></router-view>
+      <router-view></router-view>
     </div>
     <footer>
       SmartKlass™️ | All Rights Reserved | Copyright 2024
@@ -29,7 +29,7 @@
     <div v-if="showInvite" class="invite-modal-overlay" @click="closeInvite">
       <div class="invite-modal" @click.stop>
         <button class="close-button" @click="closeInvite">×</button>
-        <InviteCollaborator :cdmnId="currentCDMNId" />
+        <InviteCollaborator />
       </div>
     </div>
   </div>
@@ -42,8 +42,7 @@ export default {
   data() {
     return {
       showPeekView: false,
-      showInvite: false,
-      currentCDMNId: 'some-dynamic-id' 
+      showInvite: false
     };
   },
   methods: {

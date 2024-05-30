@@ -27,16 +27,10 @@
 
 <script>
 import { db } from '@/firebase';
-import { doc, onSnapshot, setDoc } from 'firebase/firestore';
+import { collection, doc, onSnapshot, updateDoc, arrayUnion } from 'firebase/firestore';
 
 export default {
   name: 'CDMNTable',
-  props: {
-    cdmnId: {
-      type: String,
-      required: true
-    }
-  },
   data() {
     return {
       columns: ['Name', 'Age', 'Salary'],
@@ -45,24 +39,42 @@ export default {
     };
   },
   created() {
-    const docRef = doc(db, 'cdmn', this.cdmnId);
-    onSnapshot(docRef, (doc) => {
-      if (doc.exists && doc.data().rows) {
+    const cdmnId = this.$route.params.cdmnId;
+    const cdmnDoc = doc(collection(db, 'cdmn'), cdmnId);
+
+    onSnapshot(cdmnDoc, (doc) => {
+      if (doc.exists()) {
         this.rows = doc.data().rows;
-      } else {
-        this.rows = [];
       }
     });
   },
   methods: {
     async addRow() {
-      this.rows.push({ ...this.newRow });
-      this.newRow = {};
-      await setDoc(doc(db, 'cdmn', this.cdmnId), { rows: this.rows });
+      const cdmnId = this.$route.params.cdmnId;
+      const cdmnDoc = doc(collection(db, 'cdmn'), cdmnId);
+
+      try {
+        await updateDoc(cdmnDoc, {
+          rows: arrayUnion(this.newRow)
+        });
+        this.newRow = {};
+      } catch (error) {
+        console.error('Error adding row:', error);
+      }
     },
     async removeRow(index) {
-      this.rows.splice(index, 1);
-      await setDoc(doc(db, 'cdmn', this.cdmnId), { rows: this.rows });
+      const cdmnId = this.$route.params.cdmnId;
+      const cdmnDoc = doc(collection(db, 'cdmn'), cdmnId);
+      const updatedRows = [...this.rows];
+      updatedRows.splice(index, 1);
+
+      try {
+        await updateDoc(cdmnDoc, {
+          rows: updatedRows
+        });
+      } catch (error) {
+        console.error('Error removing row:', error);
+      }
     },
     getColumnClass(index) {
       return index % 2 === 0 ? 'column-even' : 'column-odd';
