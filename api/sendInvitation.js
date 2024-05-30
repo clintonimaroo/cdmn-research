@@ -1,5 +1,5 @@
 import { Resend } from 'resend';
-import { db } from '../../src/firebase';  
+import { db } from '../src/firebase';  
 import { collection, doc, setDoc } from 'firebase/firestore';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
