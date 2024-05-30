@@ -31,11 +31,15 @@ import { collection, doc, onSnapshot, updateDoc, arrayUnion } from 'firebase/fir
 
 export default {
   name: 'CDMNTable',
-  props: ['cdmnId'], 
+  props: ['cdmnId'],
   data() {
     return {
       columns: ['Name', 'Age', 'Salary'],
-      newRow: {},
+      newRow: {
+        Name: '',
+        Age: '',
+        Salary: ''
+      },
       rows: []
     };
   },
@@ -44,19 +48,34 @@ export default {
 
     onSnapshot(cdmnDoc, (doc) => {
       if (doc.exists()) {
-        this.rows = doc.data().rows;
+        console.log('Document data:', doc.data());
+        this.rows = doc.data().rows || [];
+      } else {
+        console.log('No such document!');
       }
     });
   },
   methods: {
     async addRow() {
+      if (!this.newRow.Name || !this.newRow.Age || !this.newRow.Salary) {
+        console.error('All fields are required');
+        alert('All fields are required');
+        return;
+      }
+
       const cdmnDoc = doc(collection(db, 'cdmn'), this.cdmnId);
 
       try {
+        console.log('Adding row:', this.newRow);
         await updateDoc(cdmnDoc, {
           rows: arrayUnion(this.newRow)
         });
-        this.newRow = {};
+        this.newRow = {
+          Name: '',
+          Age: '',
+          Salary: ''
+        };
+        console.log('Row added successfully');
       } catch (error) {
         console.error('Error adding row:', error);
       }
@@ -67,9 +86,11 @@ export default {
       updatedRows.splice(index, 1);
 
       try {
+        console.log('Removing row at index:', index);
         await updateDoc(cdmnDoc, {
           rows: updatedRows
         });
+        console.log('Row removed successfully');
       } catch (error) {
         console.error('Error removing row:', error);
       }
@@ -80,7 +101,6 @@ export default {
   }
 };
 </script>
-
 
 <style scoped>
 th {
