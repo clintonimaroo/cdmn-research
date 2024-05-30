@@ -22,7 +22,7 @@ export default {
     methods: {
         async sendInvitation() {
             const uniqueToken = Math.random().toString(36).substr(2);
-            const uniqueUrl = `http://localhost:8080/join?cdmnId=your-cdmn-id&token=${uniqueToken}`; 
+            const uniqueUrl = `http://cdmn.xyz/join?cdmnId=your-cdmn-id&token=${uniqueToken}`; 
             const emailContent = `
         <p>You have been invited to collaborate on a cDMN table.</p>
         <p>Click <a href="${uniqueUrl}">here</a> to join.</p>
