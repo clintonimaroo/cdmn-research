@@ -3,7 +3,8 @@
     <nav>
       <router-link to="/column-types">+ Column Types</router-link>
       <router-link to="/table-types">+ Table Types</router-link>
-      <router-link :to="{ name: 'cdmn-table', params: { cdmnId: 'your-dynamic-cdmn-id' } }">+ CDMN Table</router-link>
+      <router-link :to="{ path: '/cdmn-table/your-dynamic-cdmn-id' }">+ CDMN Table</router-link>
+      <!-- Update with the correct path -->
       <button class="info-button" @click="showPeekView = true">
         <img src="@/assets/info.png" alt="What's CDMN?" class="info-button-gif" />
       </button>
@@ -29,7 +30,7 @@
     <div v-if="showInvite" class="invite-modal-overlay" @click="closeInvite">
       <div class="invite-modal" @click.stop>
         <button class="close-button" @click="closeInvite">×</button>
-        <InviteCollaborator />
+        <InviteCollaborator :cdmnId="'your-dynamic-cdmn-id'" />
       </div>
     </div>
   </div>
