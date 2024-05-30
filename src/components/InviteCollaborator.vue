@@ -44,7 +44,7 @@ export default {
 
                 
                 await resend.emails.send({
-                    from: 'noreply@cdmn.xyz', 
+                    from: 'noreply@cdmn.xyz',
                     to: this.email,
                     subject: 'Invitation to Collaborate on cDMN Table',
                     html: emailContent
