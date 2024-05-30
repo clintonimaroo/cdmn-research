@@ -1,4 +1,3 @@
-// api/sendInvitation.js
 import { Resend } from 'resend';
 import { db } from '../../src/firebase';
 import { collection, doc, setDoc } from 'firebase/firestore';
@@ -24,7 +23,6 @@ export default async (req, res) => {
                 timestamp: new Date()
             });
 
-            
             await resend.emails.send({
                 from: 'noreply@cdmn.xyz', 
                 to: email,
