@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import ColumnTypes from '../components/ColumnTypes.vue';
 import TableTypes from '../components/TableTypes.vue';
 import CDMNTable from '../components/CDMNTable.vue';
-import JoinCollaboration from '../components/Join.vue';
+import JoinCollaboration from '../components/JoinCollaboration.vue';
 import InviteCollaborator from '../components/InviteCollaborator.vue';
 
 const routes = [
