@@ -1,5 +1,5 @@
 import { Resend } from 'resend';
-import { db } from '../src/firebase';  
+import { db } from '../src/firebase.js'; 
 import { collection, doc, setDoc } from 'firebase/firestore';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
@@ -20,6 +20,7 @@ export default async (req, res) => {
     `;
 
         try {
+            
             await setDoc(doc(collection(db, 'invitations'), uniqueToken), {
                 email,
                 url: uniqueUrl,
