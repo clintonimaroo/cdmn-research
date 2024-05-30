@@ -20,7 +20,6 @@ export default async (req, res) => {
     `;
 
         try {
-            
             await setDoc(doc(collection(db, 'invitations'), uniqueToken), {
                 email,
                 url: uniqueUrl,
