@@ -26,29 +26,33 @@
 </template>
 
 <script>
-import { saveToLocalStorage, loadFromLocalStorage } from '@/utils/storage';
+import { db } from '@/firebase';
 
 export default {
   name: 'CDMNTable',
   data() {
     return {
-      columns: ['Name', 'Age', 'Salary'], // Define three columns
+      columns: ['Name', 'Age', 'Salary'], 
       newRow: {},
-      rows: loadFromLocalStorage('rows') || []
+      rows: []
     };
   },
+  created() {
+    db.collection('cdmn').doc('your-cdmn-id').onSnapshot(doc => {
+      if (doc.exists) {
+        this.rows = doc.data().rows;
+      }
+    });
+  },
   methods: {
-    addRow() {
+    async addRow() {
       this.rows.push({ ...this.newRow });
       this.newRow = {};
-      saveToLocalStorage('rows', this.rows);
+      await db.collection('cdmn').doc('your-cdmn-id').set({ rows: this.rows });
     },
-    removeRow(index) {
+    async removeRow(index) {
       this.rows.splice(index, 1);
-      saveToLocalStorage('rows', this.rows);
-    },
-    getColumnClass(index) {
-      return index % 2 === 0 ? 'column-even' : 'column-odd';
+      await db.collection('cdmn').doc('your-cdmn-id').set({ rows: this.rows });
     }
   }
 };
