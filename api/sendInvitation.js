@@ -35,8 +35,9 @@ export default async (req, res) => {
               overflow: hidden;
             }
             .header {
-              background-color: #42b983;
+              background-color: #000000;
               color: #ffffff;
+              text-color: #ffffff;
               padding: 20px;
               text-align: center;
             }
@@ -50,7 +51,8 @@ export default async (req, res) => {
               margin: 20px 0;
               font-size: 16px;
               color: #ffffff;
-              background-color: #42b983;
+              text-color: #ffffff;
+              background-color: #000000;
               border: none;
               border-radius: 5px;
               text-decoration: none;
