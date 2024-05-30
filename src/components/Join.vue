@@ -6,7 +6,7 @@
         <div v-else-if="error">{{ error }}</div>
         <div v-else>
             <p>You have successfully joined the collaboration!</p>
-            <!-- Render the CDMN table or any other relevant information here -->
+
         </div>
     </div>
 </template>

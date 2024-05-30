@@ -1,5 +1,5 @@
 import { Resend } from 'resend';
-import { db } from '../../src/firebase';
+import { db } from '../../src/firebase';  
 import { collection, doc, setDoc } from 'firebase/firestore';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
@@ -7,6 +7,10 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 export default async (req, res) => {
     if (req.method === 'POST') {
         const { email, cdmnId } = req.body;
+
+        if (!email || !cdmnId) {
+            return res.status(400).json({ error: 'Email and cdmnId are required' });
+        }
 
         const uniqueToken = Math.random().toString(36).substr(2);
         const uniqueUrl = `https://www.cdmn.xyz/join?cdmnId=${cdmnId}&token=${uniqueToken}`;
@@ -23,6 +27,7 @@ export default async (req, res) => {
                 timestamp: new Date()
             });
 
+            
             await resend.emails.send({
                 from: 'noreply@cdmn.xyz', 
                 to: email,
@@ -37,6 +42,6 @@ export default async (req, res) => {
         }
     } else {
         res.setHeader('Allow', ['POST']);
-        res.status(405).end(`Method ${req.method} Not Allowed`);
+        res.status(405).json({ error: `Method ${req.method} Not Allowed` });
     }
 };

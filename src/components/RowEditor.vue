@@ -15,19 +15,19 @@
     name: 'RowEditor',
     data() {
       return {
-        columns: ['Column1', 'Column2'], // Replace with dynamic columns if needed
+        columns: ['Column1', 'Column2'], 
         newRow: {},
       };
     },
     methods: {
       addRow() {
-        // Logic to add row
+        
       },
     },
   };
   </script>
   
   <style scoped>
-  /* Add your styling here */
+  
   </style>
   

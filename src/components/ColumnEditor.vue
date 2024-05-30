@@ -22,13 +22,12 @@
     },
     methods: {
       addColumn() {
-        // Logic to add column
+        
       },
     },
   };
   </script>
   
   <style scoped>
-  /* Add your styling here */
   </style>
   
