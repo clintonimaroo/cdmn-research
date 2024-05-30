@@ -26,6 +26,7 @@ export default {
                 const data = await response.json();
                 if (response.ok) {
                     this.message = data.message;
+                    this.$router.push({ path: `/cdmn-table/${cdmnId}` });
                 } else {
                     this.error = data.error;
                 }

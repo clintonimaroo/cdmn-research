@@ -31,6 +31,7 @@ import { collection, doc, onSnapshot, updateDoc, arrayUnion } from 'firebase/fir
 
 export default {
   name: 'CDMNTable',
+  props: ['cdmnId'], 
   data() {
     return {
       columns: ['Name', 'Age', 'Salary'],
@@ -39,8 +40,7 @@ export default {
     };
   },
   created() {
-    const cdmnId = this.$route.params.cdmnId;
-    const cdmnDoc = doc(collection(db, 'cdmn'), cdmnId);
+    const cdmnDoc = doc(collection(db, 'cdmn'), this.cdmnId);
 
     onSnapshot(cdmnDoc, (doc) => {
       if (doc.exists()) {
@@ -50,8 +50,7 @@ export default {
   },
   methods: {
     async addRow() {
-      const cdmnId = this.$route.params.cdmnId;
-      const cdmnDoc = doc(collection(db, 'cdmn'), cdmnId);
+      const cdmnDoc = doc(collection(db, 'cdmn'), this.cdmnId);
 
       try {
         await updateDoc(cdmnDoc, {
@@ -63,8 +62,7 @@ export default {
       }
     },
     async removeRow(index) {
-      const cdmnId = this.$route.params.cdmnId;
-      const cdmnDoc = doc(collection(db, 'cdmn'), cdmnId);
+      const cdmnDoc = doc(collection(db, 'cdmn'), this.cdmnId);
       const updatedRows = [...this.rows];
       updatedRows.splice(index, 1);
 
@@ -82,6 +80,7 @@ export default {
   }
 };
 </script>
+
 
 <style scoped>
 th {
