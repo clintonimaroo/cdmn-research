@@ -27,7 +27,7 @@
 
 <script>
 import { db } from '@/firebase';
-import { collection, doc, onSnapshot, updateDoc } from 'firebase/firestore';
+import { collection, doc, onSnapshot, updateDoc, setDoc, getDoc } from 'firebase/firestore';
 
 export default {
   name: 'CDMNTable',
@@ -66,6 +66,13 @@ export default {
       const cdmnDoc = doc(collection(db, 'cdmn'), this.cdmnId);
 
       try {
+        // Check if the document exists
+        const docSnapshot = await getDoc(cdmnDoc);
+        if (!docSnapshot.exists()) {
+          // Create the document with an initial rows array if it doesn't exist
+          await setDoc(cdmnDoc, { rows: [] });
+        }
+
         console.log('Adding row:', this.newRow);
         const updatedRows = [...this.rows, this.newRow];
         await updateDoc(cdmnDoc, {
