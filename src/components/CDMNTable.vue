@@ -27,20 +27,30 @@
 
 <script>
 import { db } from '@/firebase';
+import { doc, onSnapshot, setDoc } from 'firebase/firestore';
 
 export default {
   name: 'CDMNTable',
+  props: {
+    cdmnId: {
+      type: String,
+      required: true
+    }
+  },
   data() {
     return {
-      columns: ['Name', 'Age', 'Salary'], 
+      columns: ['Name', 'Age', 'Salary'],
       newRow: {},
       rows: []
     };
   },
   created() {
-    db.collection('cdmn').doc('your-cdmn-id').onSnapshot(doc => {
-      if (doc.exists) {
+    const docRef = doc(db, 'cdmn', this.cdmnId);
+    onSnapshot(docRef, (doc) => {
+      if (doc.exists && doc.data().rows) {
         this.rows = doc.data().rows;
+      } else {
+        this.rows = [];
       }
     });
   },
@@ -48,11 +58,14 @@ export default {
     async addRow() {
       this.rows.push({ ...this.newRow });
       this.newRow = {};
-      await db.collection('cdmn').doc('your-cdmn-id').set({ rows: this.rows });
+      await setDoc(doc(db, 'cdmn', this.cdmnId), { rows: this.rows });
     },
     async removeRow(index) {
       this.rows.splice(index, 1);
-      await db.collection('cdmn').doc('your-cdmn-id').set({ rows: this.rows });
+      await setDoc(doc(db, 'cdmn', this.cdmnId), { rows: this.rows });
+    },
+    getColumnClass(index) {
+      return index % 2 === 0 ? 'column-even' : 'column-odd';
     }
   }
 };
@@ -107,16 +120,16 @@ button {
 }
 
 td button {
-    padding: 5px 10px;
-    border: none;
-    background-color: transparent;
-    color: #000000;
-    font-size: 15px;
-    cursor: pointer;
-    margin: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  padding: 5px 10px;
+  border: none;
+  background-color: transparent;
+  color: #000000;
+  font-size: 15px;
+  cursor: pointer;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .add-row-button {
@@ -131,6 +144,4 @@ td button {
   align-items: center;
   justify-content: center;
 }
-
-
 </style>

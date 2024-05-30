@@ -8,12 +8,18 @@
 
 <script>
 import { db } from '@/firebase';
-import { collection, doc, setDoc } from 'firebase/firestore'; 
+import { collection, doc, setDoc } from 'firebase/firestore';
 import { Resend } from 'resend';
 
 const resend = new Resend(process.env.VUE_APP_RESEND_API_KEY);
 
 export default {
+    props: {
+        cdmnId: {
+            type: String,
+            required: true
+        }
+    },
     data() {
         return {
             email: ''
@@ -22,7 +28,7 @@ export default {
     methods: {
         async sendInvitation() {
             const uniqueToken = Math.random().toString(36).substr(2);
-            const uniqueUrl = `http://cdmn.xyz/join?cdmnId=your-cdmn-id&token=${uniqueToken}`; 
+            const uniqueUrl = `https://www.cdmn.xyz/join?cdmnId=${this.cdmnId}&token=${uniqueToken}`;
             const emailContent = `
         <p>You have been invited to collaborate on a cDMN table.</p>
         <p>Click <a href="${uniqueUrl}">here</a> to join.</p>
@@ -36,9 +42,9 @@ export default {
                     timestamp: new Date()
                 });
 
-               
+                
                 await resend.emails.send({
-                    from: 'your-email@example.com', 
+                    from: 'noreply@cdmn.xyz', 
                     to: this.email,
                     subject: 'Invitation to Collaborate on cDMN Table',
                     html: emailContent
