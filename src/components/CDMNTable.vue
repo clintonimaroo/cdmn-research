@@ -27,7 +27,7 @@
 
 <script>
 import { db } from '@/firebase';
-import { collection, doc, onSnapshot, updateDoc, arrayUnion } from 'firebase/firestore';
+import { collection, doc, onSnapshot, updateDoc } from 'firebase/firestore';
 
 export default {
   name: 'CDMNTable',
@@ -67,8 +67,9 @@ export default {
 
       try {
         console.log('Adding row:', this.newRow);
+        const updatedRows = [...this.rows, this.newRow];
         await updateDoc(cdmnDoc, {
-          rows: arrayUnion(this.newRow)
+          rows: updatedRows
         });
         this.newRow = {
           Name: '',
