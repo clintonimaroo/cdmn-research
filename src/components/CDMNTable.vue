@@ -15,15 +15,26 @@
             </td>
             <td><button type="submit" class="add-row-button">+</button></td>
           </tr>
-          <tr v-for="(row, index) in rows" :key="index">
-            <td v-for="column in columns" :key="column">{{ row[column] }}</td>
-            <td><button class="remove" @click="removeRow(index)">x</button></td>
+          <tr v-for="(row, rowIndex) in rows" :key="rowIndex">
+            <td v-for="(column, colIndex) in columns" :key="colIndex">
+              <div @dblclick="editCell(rowIndex, column)">
+                <template v-if="isEditing(rowIndex, column)">
+                  <input v-model="editingData[rowIndex][column]" @blur="saveEdit(rowIndex, column)"
+                    @keyup.enter="saveEdit(rowIndex, column)" />
+                </template>
+                <template v-else>
+                  {{ row[column] }}
+                </template>
+              </div>
+            </td>
+            <td><button class="remove" @click="removeRow(rowIndex)">x</button></td>
           </tr>
         </tbody>
       </table>
     </form>
   </div>
 </template>
+
 
 <script>
 import { db } from '@/firebase';
@@ -40,7 +51,8 @@ export default {
         Age: '',
         Salary: ''
       },
-      rows: []
+      rows: [],
+      editingData: {}
     };
   },
   created() {
@@ -50,12 +62,39 @@ export default {
       if (doc.exists()) {
         console.log('Document data:', doc.data());
         this.rows = doc.data().rows || [];
+        this.resetEditingData();
       } else {
         console.log('No such document!');
       }
     });
   },
   methods: {
+    resetEditingData() {
+      this.editingData = this.rows.map(row => ({ ...row }));
+    },
+    isEditing(rowIndex, column) {
+      return this.editingData[rowIndex] && this.editingData[rowIndex][column] !== undefined;
+    },
+    editCell(rowIndex, column) {
+      if (!this.editingData[rowIndex]) {
+        this.$set(this.editingData, rowIndex, { ...this.rows[rowIndex] });
+      }
+      this.$set(this.editingData[rowIndex], column, this.rows[rowIndex][column]);
+    },
+    async saveEdit(rowIndex, column) {
+      this.rows[rowIndex][column] = this.editingData[rowIndex][column];
+      const cdmnDoc = doc(collection(db, 'cdmn'), this.cdmnId);
+
+      try {
+        await updateDoc(cdmnDoc, {
+          rows: this.rows
+        });
+        delete this.editingData[rowIndex][column];
+        console.log('Cell updated successfully');
+      } catch (error) {
+        console.error('Error updating cell:', error);
+      }
+    },
     async addRow() {
       if (!this.newRow.Name || !this.newRow.Age || !this.newRow.Salary) {
         console.error('All fields are required');
@@ -66,10 +105,8 @@ export default {
       const cdmnDoc = doc(collection(db, 'cdmn'), this.cdmnId);
 
       try {
-        // Check if the document exists
         const docSnapshot = await getDoc(cdmnDoc);
         if (!docSnapshot.exists()) {
-          // Create the document with an initial rows array if it doesn't exist
           await setDoc(cdmnDoc, { rows: [] });
         }
 
@@ -108,6 +145,7 @@ export default {
     }
   }
 };
+
 </script>
 
 <style scoped>

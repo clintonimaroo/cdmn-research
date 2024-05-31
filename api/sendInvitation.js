@@ -99,7 +99,7 @@ export default async (req, res) => {
 
             
             await resend.emails.send({
-                from: 'Team SmartKlass <noreply@cdmn.xyz>', 
+                from: 'noreply@cdmn.xyz', 
                 to: email,
                 subject: 'Invitation to Collaborate on cDMN Table',
                 html: emailContent
