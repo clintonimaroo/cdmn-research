@@ -23,12 +23,13 @@ export default {
     methods: {
         async sendInvitation() {
             try {
+                const userId = this.$root.$userId;
                 const response = await fetch('/api/sendInvitation', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ email: this.email, cdmnId: this.cdmnId })
+                    body: JSON.stringify({ email: this.email, cdmnId: this.cdmnId || userId }) 
                 });
 
                 const data = await response.json();

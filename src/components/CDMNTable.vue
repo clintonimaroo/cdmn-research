@@ -48,7 +48,9 @@ export default {
   },
   methods: {
     fetchData() {
-      const cdmnDoc = doc(db, 'cdmn', this.cdmnId);
+      const userId = this.$root.$userId; // Get the user ID from the global properties
+      const docId = this.cdmnId || userId; // Use cdmnId if present, otherwise use userId
+      const cdmnDoc = doc(db, 'cdmn', docId);
 
       onSnapshot(cdmnDoc, (doc) => {
         if (doc.exists()) {
@@ -65,7 +67,9 @@ export default {
         return;
       }
 
-      const cdmnDoc = doc(db, 'cdmn', this.cdmnId);
+      const userId = this.$root.$userId; // Get the user ID from the global properties
+      const docId = this.cdmnId || userId; // Use cdmnId if present, otherwise use userId
+      const cdmnDoc = doc(db, 'cdmn', docId);
 
       try {
         const docSnapshot = await getDoc(cdmnDoc);
@@ -88,7 +92,9 @@ export default {
       }
     },
     async removeRow(index) {
-      const cdmnDoc = doc(db, 'cdmn', this.cdmnId);
+      const userId = this.$root.$userId; 
+      const docId = this.cdmnId || userId; 
+      const cdmnDoc = doc(db, 'cdmn', docId);
       const updatedRows = [...this.rows];
       updatedRows.splice(index, 1);
 
