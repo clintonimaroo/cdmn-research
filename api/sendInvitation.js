@@ -1,6 +1,7 @@
 import { Resend } from 'resend';
 import { db } from '../src/firebase.js';
 import { collection, doc, setDoc } from 'firebase/firestore';
+import { format } from 'date-fns';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -14,6 +15,12 @@ export default async (req, res) => {
 
     const uniqueToken = Math.random().toString(36).substr(2);
     const uniqueUrl = `https://www.cdmn.xyz/join?cdmnId=${cdmnId}&token=${uniqueToken}`;
+
+  
+    const expirationTime = new Date();
+    expirationTime.setHours(expirationTime.getHours() + 24); 
+    const formattedExpirationTime = format(expirationTime, 'yyyy-MM-dd HH:mm:ss'); 
+
     const emailContent = `
         <!DOCTYPE html>
         <html>
@@ -79,6 +86,7 @@ export default async (req, res) => {
               <a href="${uniqueUrl}" class="button">Accept Collaboration</a>
               <p>If the button above does not work, copy and paste the following URL into your browser:</p>
               <p><a href="${uniqueUrl}">${uniqueUrl}</a></p>
+              <p><strong>Note:</strong> This invitation link is valid until ${formattedExpirationTime}.</p>
               <p>Thank you,</p>
               <p>The CDMN Team</p>
             </div>
@@ -90,9 +98,6 @@ export default async (req, res) => {
         </html>
       `;
 
-    const expirationTime = new Date();
-    expirationTime.setHours(expirationTime.getHours() + 24); // Link expires in 24 hours
-
     try {
       await setDoc(doc(collection(db, 'invitations'), uniqueToken), {
         email,
@@ -103,7 +108,7 @@ export default async (req, res) => {
       });
 
       await resend.emails.send({
-        from: 'noreply@cdmn.xyz',
+        from: 'CDMN Team <noreply@cdmn.xyz>',
         to: email,
         subject: 'Invitation to Collaborate on CDMN Table',
         html: emailContent
