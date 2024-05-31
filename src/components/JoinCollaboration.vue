@@ -33,6 +33,7 @@ export default {
                     this.error = data.error;
                 }
             } catch (err) {
+                console.error('Error joining collaboration:', err);
                 this.error = 'An error occurred while joining the collaboration. Please try again later.';
             }
         } else {
