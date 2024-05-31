@@ -11,6 +11,7 @@ const routes = [
   { path: '/cdmn-table/:sessionId', component: CDMNTable, props: true, name: 'cdmn-table' },
   { path: '/join', component: JoinCollaboration },
   { path: '/invite/:cdmnId', component: InviteCollaborator, props: true }
+
 ];
 
 const router = createRouter({

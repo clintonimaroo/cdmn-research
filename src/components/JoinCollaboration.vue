@@ -1,16 +1,13 @@
 <template>
     <div>
         <h2>Join Collaboration</h2>
-        <NotificationMessage v-if="notification" :message="notification.message" :type="notification.type" />
+        <p v-if="notification" :class="notification.type">{{ notification.message }}</p>
     </div>
 </template>
 
 <script>
-import NotificationMessage from '@/components/Notification.vue';
-
 export default {
     name: 'JoinCollaboration',
-    components: { NotificationMessage },
     data() {
         return {
             notification: null
