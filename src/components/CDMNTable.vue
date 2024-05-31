@@ -5,7 +5,7 @@
       <table>
         <thead>
           <tr>
-            <th v-for="(column, index) in columns" :key="index">{{ column }}</th>
+            <th v-for="(column, index) in columns" :key="index" :class="getColumnClass(index)">{{ column }}</th>
           </tr>
         </thead>
         <tbody>
@@ -27,11 +27,11 @@
 
 <script>
 import { db } from '@/firebase';
-import { doc, onSnapshot, updateDoc, setDoc, getDoc } from 'firebase/firestore';
+import { collection, doc, onSnapshot, updateDoc, setDoc, getDoc } from 'firebase/firestore';
 
 export default {
   name: 'CDMNTable',
-  props: ['cdmnId'],
+  props: ['cdmnId', 'userId'],
   data() {
     return {
       columns: ['Name', 'Age', 'Salary'],
@@ -44,32 +44,24 @@ export default {
     };
   },
   created() {
-    this.fetchData();
+    const sessionId = `${this.userId}_${this.cdmnId}`;
+    const cdmnDoc = doc(collection(db, 'cdmn'), sessionId);
+
+    onSnapshot(cdmnDoc, (doc) => {
+      if (doc.exists()) {
+        this.rows = doc.data().rows || [];
+      }
+    });
   },
   methods: {
-    fetchData() {
-      const userId = this.$root.$userId; // Get the user ID from the global properties
-      const docId = this.cdmnId || userId; // Use cdmnId if present, otherwise use userId
-      const cdmnDoc = doc(db, 'cdmn', docId);
-
-      onSnapshot(cdmnDoc, (doc) => {
-        if (doc.exists()) {
-          this.rows = doc.data().rows || [];
-        } else {
-          console.log('No such document!');
-        }
-      });
-    },
     async addRow() {
       if (!this.newRow.Name || !this.newRow.Age || !this.newRow.Salary) {
-        console.error('All fields are required');
         alert('All fields are required');
         return;
       }
 
-      const userId = this.$root.$userId; // Get the user ID from the global properties
-      const docId = this.cdmnId || userId; // Use cdmnId if present, otherwise use userId
-      const cdmnDoc = doc(db, 'cdmn', docId);
+      const sessionId = `${this.userId}_${this.cdmnId}`;
+      const cdmnDoc = doc(collection(db, 'cdmn'), sessionId);
 
       try {
         const docSnapshot = await getDoc(cdmnDoc);
@@ -86,15 +78,13 @@ export default {
           Age: '',
           Salary: ''
         };
-        console.log('Row added successfully');
       } catch (error) {
         console.error('Error adding row:', error);
       }
     },
     async removeRow(index) {
-      const userId = this.$root.$userId; 
-      const docId = this.cdmnId || userId; 
-      const cdmnDoc = doc(db, 'cdmn', docId);
+      const sessionId = `${this.userId}_${this.cdmnId}`;
+      const cdmnDoc = doc(collection(db, 'cdmn'), sessionId);
       const updatedRows = [...this.rows];
       updatedRows.splice(index, 1);
 
@@ -102,15 +92,16 @@ export default {
         await updateDoc(cdmnDoc, {
           rows: updatedRows
         });
-        console.log('Row removed successfully');
       } catch (error) {
         console.error('Error removing row:', error);
       }
+    },
+    getColumnClass(index) {
+      return index % 2 === 0 ? 'column-even' : 'column-odd';
     }
   }
 };
 </script>
-
 
 <style scoped>
 th {

@@ -22,7 +22,7 @@ export default async (req, res) => {
             return res.status(400).json({ error: 'This invitation link has expired' });
         }
 
-        res.status(200).json({ message: 'Successfully joined the collaboration!', cdmnId });
+        res.status(200).json({ message: 'Successfully joined the collaboration!', cdmnId: inviteData.cdmnId });
     } catch (error) {
         console.error('Error processing invitation:', error);
         res.status(500).json({ error: 'An error occurred while processing the invitation' });
