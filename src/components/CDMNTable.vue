@@ -44,22 +44,21 @@ export default {
     };
   },
   created() {
-    this.loadTableData();
+    const cdmnDoc = doc(collection(db, 'cdmn'), this.cdmnId);
+
+    onSnapshot(cdmnDoc, (doc) => {
+      if (doc.exists()) {
+        console.log('Document data:', doc.data());
+        this.rows = doc.data().rows || [];
+      } else {
+        console.log('No such document!');
+      }
+    });
   },
   methods: {
-    async loadTableData() {
-      const cdmnDoc = doc(collection(db, 'cdmn'), this.cdmnId);
-
-      onSnapshot(cdmnDoc, (doc) => {
-        if (doc.exists()) {
-          this.rows = doc.data().rows || [];
-        } else {
-          console.log('No such document!');
-        }
-      });
-    },
     async addRow() {
       if (!this.newRow.Name || !this.newRow.Age || !this.newRow.Salary) {
+        console.error('All fields are required');
         alert('All fields are required');
         return;
       }
@@ -67,19 +66,24 @@ export default {
       const cdmnDoc = doc(collection(db, 'cdmn'), this.cdmnId);
 
       try {
+        // Check if the document exists
         const docSnapshot = await getDoc(cdmnDoc);
         if (!docSnapshot.exists()) {
+          // Create the document with an initial rows array if it doesn't exist
           await setDoc(cdmnDoc, { rows: [] });
         }
 
+        console.log('Adding row:', this.newRow);
         const updatedRows = [...this.rows, this.newRow];
-        await updateDoc(cdmnDoc, { rows: updatedRows });
-
+        await updateDoc(cdmnDoc, {
+          rows: updatedRows
+        });
         this.newRow = {
           Name: '',
           Age: '',
           Salary: ''
         };
+        console.log('Row added successfully');
       } catch (error) {
         console.error('Error adding row:', error);
       }
@@ -90,7 +94,11 @@ export default {
       updatedRows.splice(index, 1);
 
       try {
-        await updateDoc(cdmnDoc, { rows: updatedRows });
+        console.log('Removing row at index:', index);
+        await updateDoc(cdmnDoc, {
+          rows: updatedRows
+        });
+        console.log('Row removed successfully');
       } catch (error) {
         console.error('Error removing row:', error);
       }
