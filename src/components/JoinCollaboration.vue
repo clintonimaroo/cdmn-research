@@ -26,7 +26,9 @@ export default {
                 const data = await response.json();
                 if (response.ok) {
                     this.message = data.message;
-                    this.$router.push({ path: `/cdmn-table/${cdmnId}` });
+                    setTimeout(() => {
+                        this.$router.push({ path: `/cdmn-table/${cdmnId}` });
+                    }, 2000);
                 } else {
                     this.error = data.error;
                 }
@@ -40,5 +42,4 @@ export default {
 };
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

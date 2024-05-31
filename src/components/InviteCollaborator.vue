@@ -3,6 +3,7 @@
         <h2>Invite Collaborator</h2>
         <input v-model="email" placeholder="User Email" />
         <button @click="sendInvitation">Send Invitation</button>
+        <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
     </div>
 </template>
 
@@ -12,11 +13,17 @@ export default {
     props: ['cdmnId'],
     data() {
         return {
-            email: ''
+            email: '',
+            errorMessage: ''
         };
     },
     methods: {
         async sendInvitation() {
+            if (!this.email || !this.cdmnId) {
+                this.errorMessage = 'Email and cdmnId are required';
+                return;
+            }
+
             try {
                 const response = await fetch('/api/sendInvitation', {
                     method: 'POST',
@@ -34,7 +41,7 @@ export default {
                 alert('Invitation sent!');
             } catch (error) {
                 console.error('Error sending invitation:', error);
-                alert(`Failed to send invitation. Please try again. Error: ${error.message}`);
+                this.errorMessage = `Failed to send invitation. Please try again. Error: ${error.message}`;
             }
         }
     }

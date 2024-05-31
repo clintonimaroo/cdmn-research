@@ -22,6 +22,7 @@ export default async (req, res) => {
             return res.status(400).json({ error: 'This invitation link has expired' });
         }
 
+        // Here you could add the user to the collaboration or perform other necessary actions
 
         res.status(200).json({ message: 'Successfully joined the collaboration!' });
     } catch (error) {
