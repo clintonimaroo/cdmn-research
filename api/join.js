@@ -2,13 +2,13 @@ import { db } from '../../src/firebase';
 import { getDoc, doc } from 'firebase/firestore';
 
 export default async (req, res) => {
-    const { cdmnId, token } = req.query;
-
-    if (!cdmnId || !token) {
-        return res.status(400).json({ error: 'Missing cdmnId or token' });
-    }
-
     try {
+        const { cdmnId, token } = req.query;
+
+        if (!cdmnId || !token) {
+            return res.status(400).json({ error: 'Missing cdmnId or token' });
+        }
+
         const inviteDoc = await getDoc(doc(db, 'invitations', token));
 
         if (!inviteDoc.exists()) {
@@ -21,6 +21,7 @@ export default async (req, res) => {
         if (now > inviteData.expirationTime.toDate()) {
             return res.status(400).json({ error: 'This invitation link has expired' });
         }
+
 
         res.status(200).json({ message: 'Successfully joined the collaboration!' });
     } catch (error) {

@@ -42,4 +42,8 @@ export default {
 </script>
 
 <style scoped>
+.error {
+    color: red;
+    margin-top: 10px;
+}
 </style>
