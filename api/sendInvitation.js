@@ -9,6 +9,7 @@ export default async (req, res) => {
     const { email, cdmnId } = req.body;
 
     if (!email || !cdmnId) {
+      console.error('Email and cdmnId are required', { email, cdmnId });
       return res.status(400).json({ error: 'Email and cdmnId are required' });
     }
 
