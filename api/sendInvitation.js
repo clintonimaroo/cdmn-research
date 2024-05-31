@@ -7,10 +7,10 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 
 export default async (req, res) => {
   if (req.method === 'POST') {
-    const { email, cdmnId } = req.body;
+    const { email, cdmnId, userId } = req.body;
 
-    if (!email || !cdmnId) {
-      return res.status(400).json({ error: 'Email and cdmnId are required' });
+    if (!email || !cdmnId || !userId) {
+      return res.status(400).json({ error: 'Email, cdmnId, and userId are required' });
     }
 
     const uniqueToken = Math.random().toString(36).substr(2);
@@ -103,8 +103,9 @@ export default async (req, res) => {
         email,
         url: uniqueUrl,
         cdmnId,
+        userId,
         timestamp: new Date(),
-        expirationTime: expirationTime
+        expirationTime
       });
 
       await resend.emails.send({
