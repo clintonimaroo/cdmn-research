@@ -1,18 +1,23 @@
 <template>
     <div>
         <h2>Join Collaboration</h2>
-        <p v-if="message">{{ message }}</p>
-        <p v-if="error">{{ error }}</p>
+        <NotificationMessage v-if="message" :message="message" type="success" />
+        <NotificationMessage v-if="error" :message="error" type="error" />
     </div>
 </template>
 
 <script>
+import NotificationMessage from '../components/Notification.vue';
+
 export default {
     name: 'JoinCollaboration',
+    components: {
+        NotificationMessage,
+    },
     data() {
         return {
             message: '',
-            error: ''
+            error: '',
         };
     },
     async created() {
@@ -26,20 +31,17 @@ export default {
                 const data = await response.json();
                 if (response.ok) {
                     this.message = data.message;
-                    setTimeout(() => {
-                        this.$router.push({ path: `/cdmn-table/${cdmnId}` });
-                    }, 2000);
+                    this.$router.push({ path: `/cdmn-table/${cdmnId}` });
                 } else {
                     this.error = data.error;
                 }
             } catch (err) {
-                console.error('Error joining collaboration:', err);
                 this.error = 'An error occurred while joining the collaboration. Please try again later.';
             }
         } else {
             this.error = 'Invalid join URL.';
         }
-    }
+    },
 };
 </script>
 

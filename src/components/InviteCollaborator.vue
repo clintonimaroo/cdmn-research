@@ -3,34 +3,37 @@
         <h2>Invite Collaborator</h2>
         <input v-model="email" placeholder="User Email" />
         <button @click="sendInvitation">Send Invitation</button>
-        <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
+        <NotificationMessage v-if="notification.message" :message="notification.message" :type="notification.type" />
     </div>
 </template>
 
 <script>
+import NotificationMessage from '../components/Notification.vue';
+
 export default {
     name: 'InviteCollaborator',
+    components: {
+        NotificationMessage,
+    },
     props: ['cdmnId'],
     data() {
         return {
             email: '',
-            errorMessage: ''
+            notification: {
+                message: '',
+                type: '',
+            },
         };
     },
     methods: {
         async sendInvitation() {
-            if (!this.email || !this.cdmnId) {
-                this.errorMessage = 'Email and cdmnId are required';
-                return;
-            }
-
             try {
                 const response = await fetch('/api/sendInvitation', {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ email: this.email, cdmnId: this.cdmnId })
+                    body: JSON.stringify({ email: this.email, cdmnId: this.cdmnId }),
                 });
 
                 const data = await response.json();
@@ -38,13 +41,14 @@ export default {
                     throw new Error(data.error || 'Failed to send invitation');
                 }
 
-                alert('Invitation sent!');
+                this.notification.message = 'Invitation sent!';
+                this.notification.type = 'success';
             } catch (error) {
-                console.error('Error sending invitation:', error);
-                this.errorMessage = `Failed to send invitation. Please try again. Error: ${error.message}`;
+                this.notification.message = `Failed to send invitation. Please try again. Error: ${error.message}`;
+                this.notification.type = 'error';
             }
-        }
-    }
+        },
+    },
 };
 </script>
 
