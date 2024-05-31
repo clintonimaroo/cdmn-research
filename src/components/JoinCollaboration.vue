@@ -3,21 +3,16 @@
         <h2>Join Collaboration</h2>
         <p v-if="message">{{ message }}</p>
         <p v-if="error">{{ error }}</p>
-        <NotificationMessage v-if="notification" :message="notification.message" :type="notification.type" />
     </div>
 </template>
 
 <script>
-import NotificationMessage from '@/components/Notification.vue';
-
 export default {
     name: 'JoinCollaboration',
-    components: { NotificationMessage },
     data() {
         return {
             message: '',
-            error: '',
-            notification: null
+            error: ''
         };
     },
     async created() {
@@ -44,3 +39,5 @@ export default {
     }
 };
 </script>
+
+<style scoped></style>

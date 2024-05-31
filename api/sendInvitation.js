@@ -82,7 +82,7 @@ export default async (req, res) => {
               <a href="${uniqueUrl}" class="button">Accept Collaboration</a>
               <p>If the button above does not work, copy and paste the following URL into your browser:</p>
               <p><a href="${uniqueUrl}">${uniqueUrl}</a></p>
-              <p><strong>Note:</strong>This link will expire on ${expirationTime.toLocaleString()}.</p>
+              <p><strong>Note:</strong> This link will expire on ${expirationTime.toLocaleString()}.</p>
               <p>Thank you,</p>
               <p>The CDMN Team</p>
             </div>
@@ -93,7 +93,6 @@ export default async (req, res) => {
         </body>
         </html>
       `;
-
 
     try {
       await setDoc(doc(collection(db, 'invitations'), uniqueToken), {
