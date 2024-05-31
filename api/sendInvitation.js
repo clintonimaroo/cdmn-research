@@ -76,7 +76,7 @@ export default async (req, res) => {
               <p>Hello,</p>
               <p>You have been invited to collaborate on a CDMN (Custom Decision Model and Notation) table.</p>
               <p>Click the button below to join the collaboration and start working together:</p>
-              <a href="${uniqueUrl}" class="button">Join Collaboration</a>
+              <a href="${uniqueUrl}" class="button">Accept Collaboration</a>
               <p>If the button above does not work, copy and paste the following URL into your browser:</p>
               <p><a href="${uniqueUrl}">${uniqueUrl}</a></p>
               <p>Thank you,</p>
@@ -89,6 +89,10 @@ export default async (req, res) => {
         </body>
         </html>
       `;
+
+       const expirationTime = new Date();
+       expirationTime.setHours(expirationTime.getHours() + 24); // Link expires in 24 hours
+
         try {
             
             await setDoc(doc(collection(db, 'invitations'), uniqueToken), {

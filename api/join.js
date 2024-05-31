@@ -1,29 +1,30 @@
-import { db } from '../src/firebase.js';
-import { collection, doc, getDoc } from 'firebase/firestore';
+import { db } from '../../src/firebase';
+import { getDoc, doc } from 'firebase/firestore';
 
 export default async (req, res) => {
-    if (req.method === 'GET') {
-        const { cdmnId, token } = req.query;
+    const { cdmnId, token } = req.query;
 
-        if (!cdmnId || !token) {
-            return res.status(400).json({ error: 'Missing cdmnId or token' });
+    if (!cdmnId || !token) {
+        return res.status(400).json({ error: 'Missing cdmnId or token' });
+    }
+
+    try {
+        const inviteDoc = await getDoc(doc(db, 'invitations', token));
+
+        if (!inviteDoc.exists()) {
+            return res.status(404).json({ error: 'Invalid invitation link' });
         }
 
-        try {
-            const docRef = doc(collection(db, 'invitations'), token);
-            const docSnap = await getDoc(docRef);
+        const inviteData = inviteDoc.data();
+        const now = new Date();
 
-            if (!docSnap.exists()) {
-                return res.status(400).json({ error: 'Invalid token' });
-            }
-
-            res.status(200).json({ message: 'Successfully joined the collaboration!' });
-        } catch (error) {
-            console.error('Error joining collaboration:', error);
-            res.status(500).json({ error: 'An error occurred while joining the collaboration. Please try again later.' });
+        if (now > inviteData.expirationTime.toDate()) {
+            return res.status(400).json({ error: 'This invitation link has expired' });
         }
-    } else {
-        res.setHeader('Allow', ['GET']);
-        res.status(405).json({ error: `Method ${req.method} Not Allowed` });
+
+        res.status(200).json({ message: 'Successfully joined the collaboration!' });
+    } catch (error) {
+        console.error('Error processing invitation:', error);
+        res.status(500).json({ error: 'An error occurred while processing the invitation' });
     }
 };

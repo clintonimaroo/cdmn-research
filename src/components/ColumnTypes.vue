@@ -17,8 +17,24 @@
             <td><button type="submit">Add Column Type</button></td>
           </tr>
           <tr v-for="(type, index) in columnTypes" :key="index">
-            <td>{{ type.name }}</td>
-            <td>{{ type.dataType }}</td>
+            <td @dblclick="enableEditing(index, 'name')">
+              <template v-if="isEditing(index, 'name')">
+                <input v-model="editingData[index].name" @blur="saveEdit(index, 'name')"
+                  @keyup.enter="saveEdit(index, 'name')" />
+              </template>
+              <template v-else>
+                {{ type.name }}
+              </template>
+            </td>
+            <td @dblclick="enableEditing(index, 'dataType')">
+              <template v-if="isEditing(index, 'dataType')">
+                <input v-model="editingData[index].dataType" @blur="saveEdit(index, 'dataType')"
+                  @keyup.enter="saveEdit(index, 'dataType')" />
+              </template>
+              <template v-else>
+                {{ type.dataType }}
+              </template>
+            </td>
             <td><button @click="removeColumnType(index)">Remove</button></td>
           </tr>
         </tbody>
@@ -28,52 +44,85 @@
 </template>
 
 <script>
-import { saveToLocalStorage, loadFromLocalStorage } from '@/utils/storage';
+import { db } from '@/firebase';
+import { collection, addDoc, getDocs, deleteDoc, doc, updateDoc } from 'firebase/firestore';
 
 export default {
   name: 'ColumnTypes',
   data() {
     return {
       newColumnType: { name: '', dataType: '' },
-      columnTypes: loadFromLocalStorage('columnTypes') || []
+      columnTypes: [],
+      editingData: {}
     };
   },
+  async created() {
+    const querySnapshot = await getDocs(collection(db, 'columnTypes'));
+    this.columnTypes = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    this.resetEditingData();
+  },
   methods: {
-    addColumnType() {
-      this.columnTypes.push({ ...this.newColumnType });
-      this.newColumnType.name = '';
-      this.newColumnType.dataType = '';
-      saveToLocalStorage('columnTypes', this.columnTypes);
+    resetEditingData() {
+      this.editingData = this.columnTypes.map(type => ({ ...type }));
     },
-    removeColumnType(index) {
-      this.columnTypes.splice(index, 1);
-      saveToLocalStorage('columnTypes', this.columnTypes);
+    isEditing(index, field) {
+      return this.editingData[index] && this.editingData[index][field] !== undefined;
+    },
+    enableEditing(index, field) {
+      this.$set(this.editingData, index, { ...this.columnTypes[index] });
+      this.$set(this.editingData[index], field, this.columnTypes[index][field]);
+    },
+    async saveEdit(index, field) {
+      const updatedType = { ...this.columnTypes[index], [field]: this.editingData[index][field] };
+      this.columnTypes[index] = updatedType;
+      const docRef = doc(db, 'columnTypes', updatedType.id);
+
+      try {
+        await updateDoc(docRef, updatedType);
+        this.$delete(this.editingData[index], field);
+        console.log('Field updated successfully');
+      } catch (error) {
+        console.error('Error updating field:', error);
+      }
+    },
+    async addColumnType() {
+      try {
+        const docRef = await addDoc(collection(db, 'columnTypes'), this.newColumnType);
+        this.columnTypes.push({ id: docRef.id, ...this.newColumnType });
+        this.newColumnType = { name: '', dataType: '' };
+        this.resetEditingData();
+      } catch (error) {
+        console.error('Error adding column type:', error);
+      }
+    },
+    async removeColumnType(index) {
+      const type = this.columnTypes[index];
+      const docRef = doc(db, 'columnTypes', type.id);
+
+      try {
+        await deleteDoc(docRef);
+        this.columnTypes.splice(index, 1);
+        this.resetEditingData();
+      } catch (error) {
+        console.error('Error removing column type:', error);
+      }
     }
   }
 };
 </script>
 
 <style scoped>
-form {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 20px;
-  gap: 10px;
+th {
+  background-color: #eb9ba4;
+  color: #333;
 }
 
-input {
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
-
-button {
-  padding: 10px 20px;
-  border: none;
-  background-color: #42b983;
-  color: white;
-  border-radius: 5px;
+td {
   cursor: pointer;
 }
 
+td input {
+  width: 100%;
+  box-sizing: border-box;
+}
 </style>
