@@ -27,6 +27,9 @@
         <button class="close-button" @click="closePeekView">×</button>
       </div>
     </div>
+    <div id="mobile-restriction">
+      This site is not available on mobile devices. Please use a desktop or laptop to access the site.
+    </div>
     <div v-if="showInvite" class="invite-modal-overlay" @click="closeInvite">
       <div class="invite-modal" @click.stop>
         <button class="close-button" @click="closeInvite">×</button>
