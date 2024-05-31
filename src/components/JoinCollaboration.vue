@@ -31,7 +31,7 @@ export default {
                     this.error = data.error;
                 }
             } catch (err) {
-                this.error = 'An error occurred while joining the collaboration. Please try again later.';
+                this.error = `An error occurred while joining the collaboration. Please try again later. Error: ${err.message}`;
             }
         } else {
             this.error = 'Invalid join URL.';
