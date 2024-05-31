@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import { db } from '../firebase';
+import { db } from '@/firebase';
 import { collection, doc, onSnapshot, setDoc, getDoc } from 'firebase/firestore';
 
 export default {
