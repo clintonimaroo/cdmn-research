@@ -29,7 +29,7 @@
 
 <script>
 import { db } from '@/firebase';
-import { collection, doc, onSnapshot, setDoc, getDoc } from 'firebase/firestore';
+import { collection, doc, onSnapshot, updateDoc, setDoc, getDoc } from 'firebase/firestore';
 
 export default {
   name: 'CDMNTable',
@@ -42,8 +42,7 @@ export default {
         Age: '',
         Salary: ''
       },
-      rows: [],
-      sessionId: this.generateSessionId()
+      rows: []
     };
   },
   created() {
@@ -51,19 +50,14 @@ export default {
 
     onSnapshot(cdmnDoc, (doc) => {
       if (doc.exists()) {
-        const data = doc.data();
-        if (data[this.sessionId]) {
-          this.rows = data[this.sessionId].rows || [];
-        }
+        console.log('Document data:', doc.data());
+        this.rows = doc.data().rows || [];
       } else {
         console.log('No such document!');
       }
     });
   },
   methods: {
-    generateSessionId() {
-      return '_' + Math.random().toString(36).substr(2, 9);
-    },
     async addRow() {
       if (!this.newRow.Name || !this.newRow.Age || !this.newRow.Salary) {
         console.error('All fields are required');
@@ -75,17 +69,15 @@ export default {
 
       try {
         const docSnapshot = await getDoc(cdmnDoc);
-        let data = {};
-        if (docSnapshot.exists()) {
-          data = docSnapshot.data();
+        if (!docSnapshot.exists()) {
+          await setDoc(cdmnDoc, { rows: [] });
         }
-        const updatedRows = (data[this.sessionId]?.rows || []).concat(this.newRow);
 
-        await setDoc(cdmnDoc, {
-          ...data,
-          [this.sessionId]: { rows: updatedRows }
+        console.log('Adding row:', this.newRow);
+        const updatedRows = [...this.rows, this.newRow];
+        await updateDoc(cdmnDoc, {
+          rows: updatedRows
         });
-
         this.newRow = {
           Name: '',
           Age: '',
@@ -98,38 +90,17 @@ export default {
     },
     async removeRow(index) {
       const cdmnDoc = doc(collection(db, 'cdmn'), this.cdmnId);
-      const docSnapshot = await getDoc(cdmnDoc);
-      const data = docSnapshot.exists() ? docSnapshot.data() : {};
-
-      const updatedRows = [...(data[this.sessionId]?.rows || [])];
+      const updatedRows = [...this.rows];
       updatedRows.splice(index, 1);
 
       try {
-        await setDoc(cdmnDoc, {
-          ...data,
-          [this.sessionId]: { rows: updatedRows }
+        console.log('Removing row at index:', index);
+        await updateDoc(cdmnDoc, {
+          rows: updatedRows
         });
         console.log('Row removed successfully');
       } catch (error) {
         console.error('Error removing row:', error);
-      }
-    },
-    async updateRow(index, column, value) {
-      const cdmnDoc = doc(collection(db, 'cdmn'), this.cdmnId);
-      const docSnapshot = await getDoc(cdmnDoc);
-      const data = docSnapshot.exists() ? docSnapshot.data() : {};
-
-      const updatedRows = [...(data[this.sessionId]?.rows || [])];
-      updatedRows[index][column] = value;
-
-      try {
-        await setDoc(cdmnDoc, {
-          ...data,
-          [this.sessionId]: { rows: updatedRows }
-        });
-        console.log('Row updated successfully');
-      } catch (error) {
-        console.error('Error updating row:', error);
       }
     },
     getColumnClass(index) {

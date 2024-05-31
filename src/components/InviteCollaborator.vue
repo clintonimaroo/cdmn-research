@@ -3,30 +3,21 @@
         <h2>Invite Collaborator</h2>
         <input v-model="email" placeholder="User Email" />
         <button @click="sendInvitation">Send Invitation</button>
-        <notification-message v-if="notification.message" :message="notification.message" :type="notification.type"
-            :duration="notification.duration">
-            <template v-slot:icon>
-                <span v-if="notification.type === 'success'">✔️</span>
-                <span v-if="notification.type === 'error'">❌</span>
-            </template>
-        </notification-message>
+        <NotificationMessage v-if="notification" :message="notification.message" :type="notification.type" />
     </div>
 </template>
 
 <script>
-import NotificationMessage from '../components/Notification.vue';
+import NotificationMessage from '@/components//Notification.vue';
 
 export default {
     name: 'InviteCollaborator',
     props: ['cdmnId'],
+    components: { NotificationMessage },
     data() {
         return {
             email: '',
-            notification: {
-                message: '',
-                type: '',
-                duration: 5000
-            }
+            notification: null
         };
     },
     methods: {
@@ -45,27 +36,12 @@ export default {
                     throw new Error(data.error || 'Failed to send invitation');
                 }
 
-                this.showNotification('Invitation sent!', 'success');
+                this.notification = { message: 'Invitation sent!', type: 'success' };
             } catch (error) {
                 console.error('Error sending invitation:', error);
-                this.showNotification(`Failed to send invitation. Please try again. Error: ${error.message}`, 'error');
+                this.notification = { message: `Failed to send invitation. Please try again. Error: ${error.message}`, type: 'error' };
             }
-        },
-        showNotification(message, type) {
-            this.notification.message = message;
-            this.notification.type = type;
-            this.notification.duration = 5000;
         }
-    },
-    components: {
-        NotificationMessage
     }
 };
 </script>
-
-<style scoped>
-.error {
-    color: red;
-    margin-top: 10px;
-}
-</style>
