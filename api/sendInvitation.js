@@ -94,6 +94,7 @@ export default async (req, res) => {
         </html>
       `;
 
+
     try {
       await setDoc(doc(collection(db, 'invitations'), uniqueToken), {
         email,
@@ -104,7 +105,7 @@ export default async (req, res) => {
       });
 
       await resend.emails.send({
-        from: 'SmartKlass™ <noreply@cdmn.xyz>',
+        from: 'SmartKlass™️ <noreply@cdmn.xyz>',
         to: email,
         subject: 'Invitation to Collaborate on CDMN Table',
         html: emailContent

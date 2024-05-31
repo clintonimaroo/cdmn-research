@@ -15,10 +15,8 @@
             </td>
             <td><button type="submit" class="add-row-button">+</button></td>
           </tr>
-          <tr v-for="(row, index) in rows" :key="index" @dblclick="editCell(index)">
-            <td v-for="column in columns" :key="column">
-              <input v-model="row[column]" @blur="updateRow(index, column, row[column])" />
-            </td>
+          <tr v-for="(row, index) in rows" :key="index">
+            <td v-for="column in columns" :key="column">{{ row[column] }}</td>
             <td><button class="remove" @click="removeRow(index)">x</button></td>
           </tr>
         </tbody>
@@ -36,6 +34,7 @@ export default {
   props: ['cdmnId'],
   data() {
     return {
+      userId: 'user_' + Math.random().toString(36).substr(2, 9),
       columns: ['Name', 'Age', 'Salary'],
       newRow: {
         Name: '',
@@ -46,7 +45,7 @@ export default {
     };
   },
   created() {
-    const cdmnDoc = doc(collection(db, 'cdmn'), this.cdmnId);
+    const cdmnDoc = doc(collection(db, 'cdmn'), `${this.userId}_${this.cdmnId}`);
 
     onSnapshot(cdmnDoc, (doc) => {
       if (doc.exists()) {
@@ -65,7 +64,7 @@ export default {
         return;
       }
 
-      const cdmnDoc = doc(collection(db, 'cdmn'), this.cdmnId);
+      const cdmnDoc = doc(collection(db, 'cdmn'), `${this.userId}_${this.cdmnId}`);
 
       try {
         const docSnapshot = await getDoc(cdmnDoc);
@@ -89,7 +88,7 @@ export default {
       }
     },
     async removeRow(index) {
-      const cdmnDoc = doc(collection(db, 'cdmn'), this.cdmnId);
+      const cdmnDoc = doc(collection(db, 'cdmn'), `${this.userId}_${this.cdmnId}`);
       const updatedRows = [...this.rows];
       updatedRows.splice(index, 1);
 
@@ -109,6 +108,7 @@ export default {
   }
 };
 </script>
+
 
 <style scoped>
 th {
