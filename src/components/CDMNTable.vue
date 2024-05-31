@@ -110,28 +110,23 @@ export default {
 th {
   color: #333;
 }
-
 .column-even {
   background-color: #b5d7a8;
 }
-
 .column-odd {
   background-color: #cfe1f3;
 }
-
 table {
   width: 100%;
   border-collapse: collapse;
   margin-bottom: 20px;
 }
-
 th,
 td {
   padding: 10px;
   border: 1px solid #ccc;
   text-align: left;
 }
-
 td input {
   width: 100%;
   padding: 8px;
@@ -139,11 +134,9 @@ td input {
   border-radius: 3px;
   box-sizing: border-box;
 }
-
 tr:nth-child(even) td {
   background-color: #f9f9f9;
 }
-
 button {
   padding: 10px 20px;
   border: none;
@@ -153,7 +146,6 @@ button {
   cursor: pointer;
   margin: 10px 0;
 }
-
 td button {
   padding: 5px 10px;
   border: none;
@@ -166,7 +158,6 @@ td button {
   align-items: center;
   justify-content: center;
 }
-
 .add-row-button {
   padding: 5px 10px;
   border: none;
