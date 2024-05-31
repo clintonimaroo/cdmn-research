@@ -12,7 +12,7 @@ import NotificationMessage from '@/components/Notification.vue';
 
 export default {
     name: 'InviteCollaborator',
-    props: ['cdmnId', 'userId'], 
+    props: ['cdmnId', 'userId'],
     components: { NotificationMessage },
     data() {
         return {
@@ -28,7 +28,7 @@ export default {
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ email: this.email, cdmnId: `${this.userId}_${this.cdmnId}` }) 
+                    body: JSON.stringify({ email: this.email, cdmnId: `${this.userId}_${this.cdmnId}` })
                 });
 
                 const data = await response.json();
