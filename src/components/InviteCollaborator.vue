@@ -12,7 +12,7 @@ import NotificationMessage from '@/components/Notification.vue';
 
 export default {
     name: 'InviteCollaborator',
-    props: ['cdmnId', 'userId'],
+    props: ['sessionId'],
     components: { NotificationMessage },
     data() {
         return {
@@ -22,14 +22,13 @@ export default {
     },
     methods: {
         async sendInvitation() {
-            const sessionId = `${this.userId}_${this.cdmnId}`;
             try {
                 const response = await fetch('/api/sendInvitation', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ email: this.email, cdmnId: sessionId })
+                    body: JSON.stringify({ email: this.email, sessionId: this.sessionId })
                 });
 
                 const data = await response.json();
@@ -39,6 +38,7 @@ export default {
 
                 this.notification = { message: 'Invitation sent!', type: 'success' };
             } catch (error) {
+                console.error('Error sending invitation:', error);
                 this.notification = { message: `Failed to send invitation. Please try again. Error: ${error.message}`, type: 'error' };
             }
         }

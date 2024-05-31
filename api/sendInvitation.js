@@ -6,14 +6,14 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 
 export default async (req, res) => {
   if (req.method === 'POST') {
-    const { email, cdmnId } = req.body;
+    const { email, sessionId } = req.body;
 
-    if (!email || !cdmnId) {
-      return res.status(400).json({ error: 'Email and cdmnId are required' });
+    if (!email || !sessionId) {
+      return res.status(400).json({ error: 'Email and sessionId are required' });
     }
 
     const uniqueToken = Math.random().toString(36).substr(2);
-    const uniqueUrl = `https://www.cdmn.xyz/join?cdmnId=${cdmnId}&token=${uniqueToken}`;
+    const uniqueUrl = `https://www.cdmn.xyz/join?sessionId=${sessionId}&token=${uniqueToken}`;
     const expirationTime = new Date();
     expirationTime.setHours(expirationTime.getHours() + 24); // Link expires in 24 hours
 
@@ -98,7 +98,7 @@ export default async (req, res) => {
       await setDoc(doc(collection(db, 'invitations'), uniqueToken), {
         email,
         url: uniqueUrl,
-        cdmnId,
+        sessionId,
         timestamp: new Date(),
         expirationTime: expirationTime
       });

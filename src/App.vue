@@ -3,8 +3,7 @@
     <nav>
       <router-link to="/column-types">+ Column Types</router-link>
       <router-link to="/table-types">+ Table Types</router-link>
-      <router-link :to="{ path: '/cdmn-table/your-dynamic-cdmn-id' }">+ CDMN Table</router-link>
-      <!-- Update with the correct path -->
+      <router-link :to="{ name: 'cdmn-table', params: { sessionId: userSessionId } }">+ CDMN Table</router-link>
       <button class="info-button" @click="showPeekView = true">
         <img src="@/assets/info.png" alt="What's CDMN?" class="info-button-gif" />
       </button>
@@ -33,21 +32,32 @@
     <div v-if="showInvite" class="invite-modal-overlay" @click="closeInvite">
       <div class="invite-modal" @click.stop>
         <button class="close-button" @click="closeInvite">×</button>
-        <InviteCollaborator :cdmnId="'your-dynamic-cdmn-id'" />
+        <InviteCollaborator :sessionId="userSessionId" />
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import { v4 as uuidv4 } from 'uuid';
 import InviteCollaborator from '@/components/InviteCollaborator';
 
 export default {
   data() {
     return {
       showPeekView: false,
-      showInvite: false
+      showInvite: false,
+      userSessionId: null,
     };
+  },
+  created() {
+    const savedSessionId = localStorage.getItem('userSessionId');
+    if (savedSessionId) {
+      this.userSessionId = savedSessionId;
+    } else {
+      this.userSessionId = uuidv4();
+      localStorage.setItem('userSessionId', this.userSessionId);
+    }
   },
   methods: {
     closePeekView() {
