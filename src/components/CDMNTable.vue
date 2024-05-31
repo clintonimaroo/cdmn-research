@@ -5,7 +5,7 @@
       <table>
         <thead>
           <tr>
-            <th v-for="(column, index) in columns" :key="index" :class="getColumnClass(index)">{{ column }}</th>
+            <th v-for="(column, index) in columns" :key="index">{{ column }}</th>
           </tr>
         </thead>
         <tbody>
@@ -27,7 +27,7 @@
 
 <script>
 import { db } from '@/firebase';
-import { collection, doc, onSnapshot, updateDoc, setDoc, getDoc } from 'firebase/firestore';
+import { doc, onSnapshot, updateDoc, setDoc, getDoc } from 'firebase/firestore';
 
 export default {
   name: 'CDMNTable',
@@ -44,18 +44,20 @@ export default {
     };
   },
   created() {
-    const cdmnDoc = doc(collection(db, 'cdmn'), this.cdmnId);
-
-    onSnapshot(cdmnDoc, (doc) => {
-      if (doc.exists()) {
-        console.log('Document data:', doc.data());
-        this.rows = doc.data().rows || [];
-      } else {
-        console.log('No such document!');
-      }
-    });
+    this.fetchData();
   },
   methods: {
+    fetchData() {
+      const cdmnDoc = doc(db, 'cdmn', this.cdmnId);
+
+      onSnapshot(cdmnDoc, (doc) => {
+        if (doc.exists()) {
+          this.rows = doc.data().rows || [];
+        } else {
+          console.log('No such document!');
+        }
+      });
+    },
     async addRow() {
       if (!this.newRow.Name || !this.newRow.Age || !this.newRow.Salary) {
         console.error('All fields are required');
@@ -63,17 +65,14 @@ export default {
         return;
       }
 
-      const cdmnDoc = doc(collection(db, 'cdmn'), this.cdmnId);
+      const cdmnDoc = doc(db, 'cdmn', this.cdmnId);
 
       try {
-        // Check if the document exists
         const docSnapshot = await getDoc(cdmnDoc);
         if (!docSnapshot.exists()) {
-          // Create the document with an initial rows array if it doesn't exist
           await setDoc(cdmnDoc, { rows: [] });
         }
 
-        console.log('Adding row:', this.newRow);
         const updatedRows = [...this.rows, this.newRow];
         await updateDoc(cdmnDoc, {
           rows: updatedRows
@@ -89,12 +88,11 @@ export default {
       }
     },
     async removeRow(index) {
-      const cdmnDoc = doc(collection(db, 'cdmn'), this.cdmnId);
+      const cdmnDoc = doc(db, 'cdmn', this.cdmnId);
       const updatedRows = [...this.rows];
       updatedRows.splice(index, 1);
 
       try {
-        console.log('Removing row at index:', index);
         await updateDoc(cdmnDoc, {
           rows: updatedRows
         });
@@ -102,13 +100,11 @@ export default {
       } catch (error) {
         console.error('Error removing row:', error);
       }
-    },
-    getColumnClass(index) {
-      return index % 2 === 0 ? 'column-even' : 'column-odd';
     }
   }
 };
 </script>
+
 
 <style scoped>
 th {
