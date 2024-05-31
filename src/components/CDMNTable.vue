@@ -15,19 +15,11 @@
             </td>
             <td><button type="submit" class="add-row-button">+</button></td>
           </tr>
-          <tr v-for="(row, rowIndex) in rows" :key="rowIndex">
-            <td v-for="(column, colIndex) in columns" :key="colIndex">
-              <div @dblclick="editCell(rowIndex, column)">
-                <template v-if="isEditing(rowIndex, column)">
-                  <input v-model="editingData[rowIndex][column]" @blur="saveEdit(rowIndex, column)"
-                    @keyup.enter="saveEdit(rowIndex, column)" />
-                </template>
-                <template v-else>
-                  {{ row[column] }}
-                </template>
-              </div>
+          <tr v-for="(row, index) in rows" :key="index" @dblclick="editCell(index)">
+            <td v-for="column in columns" :key="column">
+              <input v-model="row[column]" @blur="updateRow(index, column, row[column])" />
             </td>
-            <td><button class="remove" @click="removeRow(rowIndex)">x</button></td>
+            <td><button class="remove" @click="removeRow(index)">x</button></td>
           </tr>
         </tbody>
       </table>
@@ -35,10 +27,9 @@
   </div>
 </template>
 
-
 <script>
-import { db } from '@/firebase';
-import { collection, doc, onSnapshot, updateDoc, setDoc, getDoc } from 'firebase/firestore';
+import { db } from '../firebase';
+import { collection, doc, onSnapshot, setDoc, getDoc } from 'firebase/firestore';
 
 export default {
   name: 'CDMNTable',
@@ -51,21 +42,28 @@ export default {
         Age: '',
         Salary: ''
       },
-      rows: []
+      rows: [],
+      sessionId: this.generateSessionId()
     };
   },
   created() {
-    const cdmnDoc = doc(collection(db, 'user_data', this.$route.params.userId, 'tables'), this.cdmnId);
+    const cdmnDoc = doc(collection(db, 'cdmn'), this.cdmnId);
 
     onSnapshot(cdmnDoc, (doc) => {
       if (doc.exists()) {
-        this.rows = doc.data().rows || [];
+        const data = doc.data();
+        if (data[this.sessionId]) {
+          this.rows = data[this.sessionId].rows || [];
+        }
       } else {
         console.log('No such document!');
       }
     });
   },
   methods: {
+    generateSessionId() {
+      return '_' + Math.random().toString(36).substr(2, 9);
+    },
     async addRow() {
       if (!this.newRow.Name || !this.newRow.Age || !this.newRow.Salary) {
         console.error('All fields are required');
@@ -73,38 +71,65 @@ export default {
         return;
       }
 
-      const cdmnDoc = doc(collection(db, 'user_data', this.$route.params.userId, 'tables'), this.cdmnId);
+      const cdmnDoc = doc(collection(db, 'cdmn'), this.cdmnId);
 
       try {
         const docSnapshot = await getDoc(cdmnDoc);
-        if (!docSnapshot.exists()) {
-          await setDoc(cdmnDoc, { rows: [] });
+        let data = {};
+        if (docSnapshot.exists()) {
+          data = docSnapshot.data();
         }
+        const updatedRows = (data[this.sessionId]?.rows || []).concat(this.newRow);
 
-        const updatedRows = [...this.rows, this.newRow];
-        await updateDoc(cdmnDoc, {
-          rows: updatedRows
+        await setDoc(cdmnDoc, {
+          ...data,
+          [this.sessionId]: { rows: updatedRows }
         });
+
         this.newRow = {
           Name: '',
           Age: '',
           Salary: ''
         };
+        console.log('Row added successfully');
       } catch (error) {
         console.error('Error adding row:', error);
       }
     },
     async removeRow(index) {
-      const cdmnDoc = doc(collection(db, 'user_data', this.$route.params.userId, 'tables'), this.cdmnId);
-      const updatedRows = [...this.rows];
+      const cdmnDoc = doc(collection(db, 'cdmn'), this.cdmnId);
+      const docSnapshot = await getDoc(cdmnDoc);
+      const data = docSnapshot.exists() ? docSnapshot.data() : {};
+
+      const updatedRows = [...(data[this.sessionId]?.rows || [])];
       updatedRows.splice(index, 1);
 
       try {
-        await updateDoc(cdmnDoc, {
-          rows: updatedRows
+        await setDoc(cdmnDoc, {
+          ...data,
+          [this.sessionId]: { rows: updatedRows }
         });
+        console.log('Row removed successfully');
       } catch (error) {
         console.error('Error removing row:', error);
+      }
+    },
+    async updateRow(index, column, value) {
+      const cdmnDoc = doc(collection(db, 'cdmn'), this.cdmnId);
+      const docSnapshot = await getDoc(cdmnDoc);
+      const data = docSnapshot.exists() ? docSnapshot.data() : {};
+
+      const updatedRows = [...(data[this.sessionId]?.rows || [])];
+      updatedRows[index][column] = value;
+
+      try {
+        await setDoc(cdmnDoc, {
+          ...data,
+          [this.sessionId]: { rows: updatedRows }
+        });
+        console.log('Row updated successfully');
+      } catch (error) {
+        console.error('Error updating row:', error);
       }
     },
     getColumnClass(index) {
@@ -112,7 +137,6 @@ export default {
     }
   }
 };
-
 </script>
 
 <style scoped>

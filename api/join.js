@@ -3,10 +3,10 @@ import { getDoc, doc } from 'firebase/firestore';
 
 export default async (req, res) => {
     try {
-        const { cdmnId, token } = req.query;
+        const { cdmnId, token, sessionId } = req.query;
 
-        if (!cdmnId || !token) {
-            return res.status(400).json({ error: 'Missing cdmnId or token' });
+        if (!cdmnId || !token || !sessionId) {
+            return res.status(400).json({ error: 'Missing cdmnId, token or sessionId' });
         }
 
         const inviteDoc = await getDoc(doc(db, 'invitations', token));
@@ -22,7 +22,7 @@ export default async (req, res) => {
             return res.status(400).json({ error: 'This invitation link has expired' });
         }
 
-        res.status(200).json({ message: 'Successfully joined the collaboration!', cdmnId });
+        res.status(200).json({ message: 'Successfully joined the collaboration!', sessionId });
     } catch (error) {
         console.error('Error processing invitation:', error);
         res.status(500).json({ error: 'An error occurred while processing the invitation' });
