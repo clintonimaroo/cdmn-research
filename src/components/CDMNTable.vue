@@ -51,50 +51,21 @@ export default {
         Age: '',
         Salary: ''
       },
-      rows: [],
-      editingData: {}
+      rows: []
     };
   },
   created() {
-    const cdmnDoc = doc(collection(db, 'cdmn'), this.cdmnId);
+    const cdmnDoc = doc(collection(db, 'user_data', this.$route.params.userId, 'tables'), this.cdmnId);
 
     onSnapshot(cdmnDoc, (doc) => {
       if (doc.exists()) {
-        console.log('Document data:', doc.data());
         this.rows = doc.data().rows || [];
-        this.resetEditingData();
       } else {
         console.log('No such document!');
       }
     });
   },
   methods: {
-    resetEditingData() {
-      this.editingData = this.rows.map(row => ({ ...row }));
-    },
-    isEditing(rowIndex, column) {
-      return this.editingData[rowIndex] && this.editingData[rowIndex][column] !== undefined;
-    },
-    editCell(rowIndex, column) {
-      if (!this.editingData[rowIndex]) {
-        this.$set(this.editingData, rowIndex, { ...this.rows[rowIndex] });
-      }
-      this.$set(this.editingData[rowIndex], column, this.rows[rowIndex][column]);
-    },
-    async saveEdit(rowIndex, column) {
-      this.rows[rowIndex][column] = this.editingData[rowIndex][column];
-      const cdmnDoc = doc(collection(db, 'cdmn'), this.cdmnId);
-
-      try {
-        await updateDoc(cdmnDoc, {
-          rows: this.rows
-        });
-        delete this.editingData[rowIndex][column];
-        console.log('Cell updated successfully');
-      } catch (error) {
-        console.error('Error updating cell:', error);
-      }
-    },
     async addRow() {
       if (!this.newRow.Name || !this.newRow.Age || !this.newRow.Salary) {
         console.error('All fields are required');
@@ -102,7 +73,7 @@ export default {
         return;
       }
 
-      const cdmnDoc = doc(collection(db, 'cdmn'), this.cdmnId);
+      const cdmnDoc = doc(collection(db, 'user_data', this.$route.params.userId, 'tables'), this.cdmnId);
 
       try {
         const docSnapshot = await getDoc(cdmnDoc);
@@ -110,7 +81,6 @@ export default {
           await setDoc(cdmnDoc, { rows: [] });
         }
 
-        console.log('Adding row:', this.newRow);
         const updatedRows = [...this.rows, this.newRow];
         await updateDoc(cdmnDoc, {
           rows: updatedRows
@@ -120,22 +90,19 @@ export default {
           Age: '',
           Salary: ''
         };
-        console.log('Row added successfully');
       } catch (error) {
         console.error('Error adding row:', error);
       }
     },
     async removeRow(index) {
-      const cdmnDoc = doc(collection(db, 'cdmn'), this.cdmnId);
+      const cdmnDoc = doc(collection(db, 'user_data', this.$route.params.userId, 'tables'), this.cdmnId);
       const updatedRows = [...this.rows];
       updatedRows.splice(index, 1);
 
       try {
-        console.log('Removing row at index:', index);
         await updateDoc(cdmnDoc, {
           rows: updatedRows
         });
-        console.log('Row removed successfully');
       } catch (error) {
         console.error('Error removing row:', error);
       }
