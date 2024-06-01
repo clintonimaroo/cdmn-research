@@ -1,7 +1,8 @@
 <template>
     <div>
         <h2>Join Collaboration</h2>
-        <p v-if="notification" :class="notification.type">{{ notification.message }}</p>
+        <p v-if="message">{{ message }}</p>
+        <p v-if="error">{{ error }}</p>
     </div>
 </template>
 
@@ -10,30 +11,30 @@ export default {
     name: 'JoinCollaboration',
     data() {
         return {
-            notification: null
+            message: '',
+            error: ''
         };
     },
     async created() {
         const urlParams = new URLSearchParams(window.location.search);
-        const sessionId = urlParams.get('sessionId');
+        const cdmnId = urlParams.get('cdmnId');
         const token = urlParams.get('token');
 
-        if (sessionId && token) {
+        if (cdmnId && token) {
             try {
-                const response = await fetch(`/api/join?sessionId=${sessionId}&token=${token}`);
+                const response = await fetch(`/api/join?cdmnId=${cdmnId}&token=${token}`);
                 const data = await response.json();
                 if (response.ok) {
-                    this.notification = { message: data.message, type: 'success' };
-                    localStorage.setItem('userSessionId', sessionId);
-                    this.$router.push({ name: 'cdmn-table', params: { sessionId } });
+                    this.message = data.message;
+                    this.$router.push({ path: `/cdmn-table/${cdmnId}` });
                 } else {
-                    this.notification = { message: data.error, type: 'error' };
+                    this.error = data.error;
                 }
             } catch (err) {
-                this.notification = { message: 'An error occurred while joining the collaboration. Please try again later.', type: 'error' };
+                this.error = 'An error occurred while joining the collaboration. Please try again later.';
             }
         } else {
-            this.notification = { message: 'Invalid join URL.', type: 'error' };
+            this.error = 'Invalid join URL.';
         }
     }
 };
