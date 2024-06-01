@@ -3,32 +3,35 @@
         <h2>Invite Collaborator</h2>
         <input v-model="email" placeholder="User Email" />
         <button @click="sendInvitation">Send Invitation</button>
-        <NotificationMessage v-if="notification" :message="notification.message" :type="notification.type" />
+        <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
     </div>
 </template>
 
 <script>
-import NotificationMessage from '@/components/Notification.vue';
-
 export default {
     name: 'InviteCollaborator',
-    props: ['sessionId'],
-    components: { NotificationMessage },
+    props: ['cdmnId'],
     data() {
         return {
             email: '',
-            notification: null
+            errorMessage: ''
         };
     },
     methods: {
         async sendInvitation() {
+            if (!this.email || !this.cdmnId) {
+                this.errorMessage = 'Email and CDMN ID are required';
+                console.error('Email or CDMN ID is missing:', this.email, this.cdmnId);
+                return;
+            }
+
             try {
                 const response = await fetch('/api/sendInvitation', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ email: this.email, sessionId: this.sessionId })
+                    body: JSON.stringify({ email: this.email, cdmnId: this.cdmnId })
                 });
 
                 const data = await response.json();
@@ -36,12 +39,20 @@ export default {
                     throw new Error(data.error || 'Failed to send invitation');
                 }
 
-                this.notification = { message: 'Invitation sent!', type: 'success' };
+                alert('Invitation sent!');
+                this.errorMessage = '';
             } catch (error) {
                 console.error('Error sending invitation:', error);
-                this.notification = { message: `Failed to send invitation. Please try again. Error: ${error.message}`, type: 'error' };
+                this.errorMessage = `Failed to send invitation. Please try again. Error: ${error.message}`;
             }
         }
     }
 };
 </script>
+
+<style scoped>
+.error {
+    color: red;
+    margin-top: 10px;
+}
+</style>
