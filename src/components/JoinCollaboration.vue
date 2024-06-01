@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import NotificationMessage from './NotificationMessage.vue';
+import NotificationMessage from '../components/Notification.vue';
 
 export default {
     name: 'JoinCollaboration',
