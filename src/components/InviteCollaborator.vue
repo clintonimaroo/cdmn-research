@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import NotificationMessage from '../components/Notification.vue';
+import NotificationMessage from './NotificationMessage.vue';
 
 export default {
     name: 'InviteCollaborator',
