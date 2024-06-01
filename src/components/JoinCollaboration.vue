@@ -1,23 +1,24 @@
 <template>
     <div>
         <h2>Join Collaboration</h2>
-        <NotificationMessage v-if="message" :message="message" type="success" />
-        <NotificationMessage v-if="error" :message="error" type="error" />
+        ```vue
+        <notification-message v-if="message" :message="message" type="success" />
+        <notification-message v-if="error" :message="error" type="error" />
     </div>
 </template>
 
 <script>
-import NotificationMessage from '../components/Notification.vue';
+import NotificationMessage from './NotificationMessage.vue';
 
 export default {
     name: 'JoinCollaboration',
     components: {
-        NotificationMessage
+        NotificationMessage,
     },
     data() {
         return {
             message: '',
-            error: ''
+            error: '',
         };
     },
     async created() {
@@ -41,8 +42,9 @@ export default {
         } else {
             this.error = 'Invalid join URL.';
         }
-    }
+    },
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+</style>
