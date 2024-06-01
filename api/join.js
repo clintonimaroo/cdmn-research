@@ -18,7 +18,7 @@ export default async (req, res) => {
         const inviteData = inviteDoc.data();
         const now = new Date();
 
-        if (now > inviteData.expirationTime.toDate()) {
+        if (now > new Date(inviteData.expirationTime)) {
             return res.status(400).json({ error: 'This invitation link has expired' });
         }
 

@@ -3,8 +3,7 @@
         <h2>Invite Collaborator</h2>
         <input v-model="email" placeholder="User Email" />
         <button @click="sendInvitation">Send Invitation</button>
-        <NotificationMessage v-if="notificationMessage" :message="notificationMessage.message"
-            :type="notificationMessage.type" />
+        <NotificationMessage v-if="notification.message" :message="notification.message" :type="notification.type" />
     </div>
 </template>
 
@@ -13,26 +12,28 @@ import NotificationMessage from '../components/Notification.vue';
 
 export default {
     name: 'InviteCollaborator',
+    props: ['cdmnId'],
     components: {
         NotificationMessage
     },
-    props: ['cdmnId'],
     data() {
         return {
             email: '',
-            notificationMessage: null
+            notification: {
+                message: '',
+                type: ''
+            }
         };
     },
     methods: {
         async sendInvitation() {
             if (!this.email || !this.cdmnId) {
-                console.error('Email or CDMN ID is missing:', this.email, this.cdmnId);
-                this.notificationMessage = {
-                    message: 'Email or CDMN ID is missing',
-                    type: 'error'
-                };
+                this.notification.message = 'Email or CDMN ID is missing';
+                this.notification.type = 'error';
+                console.error(`Email or CDMN ID is missing: ${this.email} ${this.cdmnId}`);
                 return;
             }
+
             try {
                 const response = await fetch('/api/sendInvitation', {
                     method: 'POST',
@@ -47,28 +48,20 @@ export default {
                     throw new Error(data.error || 'Failed to send invitation');
                 }
 
-                this.notificationMessage = {
-                    message: 'Invitation sent!',
-                    type: 'success'
-                };
+                this.notification.message = 'Invitation sent!';
+                this.notification.type = 'success';
             } catch (error) {
                 console.error('Error sending invitation:', error);
-                this.notificationMessage = {
-                    message: `Failed to send invitation. Please try again. Error: ${error.message}`,
-                    type: 'error'
-                };
+                this.notification.message = `Failed to send invitation. Please try again. Error: ${error.message}`;
+                this.notification.type = 'error';
             }
         }
     },
     mounted() {
-        console.log('InviteCollaborator mounted with cdmnId:', this.cdmnId);
+        console.log(`InviteCollaborator mounted with cdmnId: ${this.cdmnId}`);
     }
 };
 </script>
 
 <style scoped>
-.error {
-    color: red;
-    margin-top: 10px;
-}
 </style>

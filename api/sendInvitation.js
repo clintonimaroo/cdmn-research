@@ -16,7 +16,6 @@ export default async (req, res) => {
     const uniqueUrl = `https://www.cdmn.xyz/join?cdmnId=${cdmnId}&token=${uniqueToken}`;
     const expirationTime = new Date();
     expirationTime.setHours(expirationTime.getHours() + 24); // Link expires in 24 hours
-
     const emailContent = `
       <!DOCTYPE html>
       <html>
@@ -40,7 +39,6 @@ export default async (req, res) => {
           .header {
             background-color: #000000;
             color: #ffffff;
-            text-color: #ffffff;
             padding: 20px;
             text-align: center;
           }
@@ -54,7 +52,6 @@ export default async (req, res) => {
             margin: 20px 0;
             font-size: 16px;
             color: #ffffff;
-            text-color: #ffffff;
             background-color: #000000;
             border: none;
             border-radius: 5px;
@@ -78,11 +75,11 @@ export default async (req, res) => {
           <div class="content">
             <p>Hello,</p>
             <p>You have been invited to collaborate on a CDMN (Custom Decision Model and Notation) table.</p>
-            <p>This invitation is valid until ${expirationTime.toLocaleString()}.</p>
             <p>Click the button below to join the collaboration and start working together:</p>
             <a href="${uniqueUrl}" class="button">Accept Collaboration</a>
             <p>If the button above does not work, copy and paste the following URL into your browser:</p>
             <p><a href="${uniqueUrl}">${uniqueUrl}</a></p>
+            <p>This invitation link is valid until ${expirationTime.toLocaleString()}.</p>
             <p>Thank you,</p>
             <p>The CDMN Team</p>
           </div>
@@ -99,12 +96,12 @@ export default async (req, res) => {
         email,
         url: uniqueUrl,
         cdmnId,
-        timestamp: new Date(),
-        expirationTime: expirationTime
+        expirationTime: expirationTime.toISOString(),
+        timestamp: new Date()
       });
 
       await resend.emails.send({
-        from: 'CDMN Invitations <noreply@cdmn.xyz>',
+        from: 'noreply@cdmn.xyz',
         to: email,
         subject: 'Invitation to Collaborate on CDMN Table',
         html: emailContent
