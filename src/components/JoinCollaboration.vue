@@ -1,14 +1,19 @@
 <template>
     <div>
         <h2>Join Collaboration</h2>
-        <p v-if="message">{{ message }}</p>
-        <p v-if="error">{{ error }}</p>
+        <NotificationMessage v-if="message" :message="message" type="success" />
+        <NotificationMessage v-if="error" :message="error" type="error" />
     </div>
 </template>
 
 <script>
+import NotificationMessage from './NotificationMessage.vue';
+
 export default {
     name: 'JoinCollaboration',
+    components: {
+        NotificationMessage
+    },
     data() {
         return {
             message: '',
@@ -40,5 +45,4 @@ export default {
 };
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

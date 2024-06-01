@@ -3,22 +3,34 @@
         <h2>Invite Collaborator</h2>
         <input v-model="email" placeholder="User Email" />
         <button @click="sendInvitation">Send Invitation</button>
+        <NotificationMessage v-if="notificationMessage" :message="notificationMessage.message"
+            :type="notificationMessage.type" />
     </div>
 </template>
 
 <script>
+import NotificationMessage from '../components/Notification.vue';
+
 export default {
     name: 'InviteCollaborator',
+    components: {
+        NotificationMessage
+    },
     props: ['cdmnId'],
     data() {
         return {
-            email: ''
+            email: '',
+            notificationMessage: null
         };
     },
     methods: {
         async sendInvitation() {
             if (!this.email || !this.cdmnId) {
-                console.error(`Email or CDMN ID is missing: ${this.email} ${this.cdmnId}`);
+                console.error('Email or CDMN ID is missing:', this.email, this.cdmnId);
+                this.notificationMessage = {
+                    message: 'Email or CDMN ID is missing',
+                    type: 'error'
+                };
                 return;
             }
             try {
@@ -35,15 +47,21 @@ export default {
                     throw new Error(data.error || 'Failed to send invitation');
                 }
 
-                alert('Invitation sent!');
+                this.notificationMessage = {
+                    message: 'Invitation sent!',
+                    type: 'success'
+                };
             } catch (error) {
                 console.error('Error sending invitation:', error);
-                alert(`Failed to send invitation. Please try again. Error: ${error.message}`);
+                this.notificationMessage = {
+                    message: `Failed to send invitation. Please try again. Error: ${error.message}`,
+                    type: 'error'
+                };
             }
         }
     },
     mounted() {
-        console.log(`InviteCollaborator mounted with cdmnId: ${this.cdmnId}`);
+        console.log('InviteCollaborator mounted with cdmnId:', this.cdmnId);
     }
 };
 </script>

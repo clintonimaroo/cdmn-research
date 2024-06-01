@@ -100,7 +100,6 @@ export default async (req, res) => {
         email,
         url: uniqueUrl,
         cdmnId,
-        inviterId: uniqueId,
         timestamp: new Date(),
         expirationTime: expirationTime
       });
