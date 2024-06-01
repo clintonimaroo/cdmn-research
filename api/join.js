@@ -3,10 +3,10 @@ import { getDoc, doc } from 'firebase/firestore';
 
 export default async (req, res) => {
     try {
-        const { sessionId, token } = req.query;
+        const { cdmnId, token } = req.query;
 
-        if (!sessionId || !token) {
-            return res.status(400).json({ error: 'Missing sessionId or token' });
+        if (!cdmnId || !token) {
+            return res.status(400).json({ error: 'Missing cdmnId or token' });
         }
 
         const inviteDoc = await getDoc(doc(db, 'invitations', token));
