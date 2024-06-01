@@ -3,7 +3,7 @@
     <nav>
       <router-link to="/column-types">+ Column Types</router-link>
       <router-link to="/table-types">+ Table Types</router-link>
-      <router-link :to="{ name: 'cdmn-table', params: { sessionId: userSessionId } }">+ CDMN Table</router-link>
+      <router-link :to="{ name: 'CDMNTable', params: { cdmnId: currentCDMNId } }">+ CDMN Table</router-link>
       <button class="info-button" @click="showPeekView = true">
         <img src="@/assets/info.png" alt="What's CDMN?" class="info-button-gif" />
       </button>
@@ -12,7 +12,7 @@
       </button>
     </nav>
     <div class="container">
-      <router-view></router-view>
+      <router-view :cdmnId="currentCDMNId"></router-view>
     </div>
     <footer>
       SmartKlass™️ | All Rights Reserved | Copyright 2024
@@ -26,38 +26,38 @@
         <button class="close-button" @click="closePeekView">×</button>
       </div>
     </div>
-    <div id="mobile-restriction">
-      This site is not available on mobile devices. Please use a desktop or laptop to access the site.
-    </div>
     <div v-if="showInvite" class="invite-modal-overlay" @click="closeInvite">
       <div class="invite-modal" @click.stop>
         <button class="close-button" @click="closeInvite">×</button>
-        <InviteCollaborator :sessionId="userSessionId" />
+        <InviteCollaborator :cdmnId="currentCDMNId" />
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { v4 as uuidv4 } from 'uuid';
 import InviteCollaborator from '@/components/InviteCollaborator';
+
+function generateUniqueID() {
+  return 'cdmn_' + Math.random().toString(36).substr(2, 9);
+}
 
 export default {
   data() {
     return {
       showPeekView: false,
       showInvite: false,
-      userSessionId: null,
+      currentCDMNId: ''
     };
   },
   created() {
-    const savedSessionId = localStorage.getItem('userSessionId');
-    if (savedSessionId) {
-      this.userSessionId = savedSessionId;
-    } else {
-      this.userSessionId = uuidv4();
-      localStorage.setItem('userSessionId', this.userSessionId);
+    let storedID = localStorage.getItem('cdmnId');
+    if (!storedID) {
+      storedID = generateUniqueID();
+      localStorage.setItem('cdmnId', storedID);
     }
+    this.currentCDMNId = storedID;
+    console.log('Current CDMN ID:', this.currentCDMNId); 
   },
   methods: {
     closePeekView() {

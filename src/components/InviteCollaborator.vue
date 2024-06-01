@@ -3,7 +3,6 @@
         <h2>Invite Collaborator</h2>
         <input v-model="email" placeholder="User Email" />
         <button @click="sendInvitation">Send Invitation</button>
-        <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
     </div>
 </template>
 
@@ -13,18 +12,15 @@ export default {
     props: ['cdmnId'],
     data() {
         return {
-            email: '',
-            errorMessage: ''
+            email: ''
         };
     },
     methods: {
         async sendInvitation() {
             if (!this.email || !this.cdmnId) {
-                this.errorMessage = 'Email and CDMN ID are required';
-                console.error('Email or CDMN ID is missing:', this.email, this.cdmnId);
+                console.error(`Email or CDMN ID is missing: ${this.email} ${this.cdmnId}`);
                 return;
             }
-
             try {
                 const response = await fetch('/api/sendInvitation', {
                     method: 'POST',
@@ -40,12 +36,14 @@ export default {
                 }
 
                 alert('Invitation sent!');
-                this.errorMessage = '';
             } catch (error) {
                 console.error('Error sending invitation:', error);
-                this.errorMessage = `Failed to send invitation. Please try again. Error: ${error.message}`;
+                alert(`Failed to send invitation. Please try again. Error: ${error.message}`);
             }
         }
+    },
+    mounted() {
+        console.log(`InviteCollaborator mounted with cdmnId: ${this.cdmnId}`);
     }
 };
 </script>
