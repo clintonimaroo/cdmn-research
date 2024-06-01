@@ -28,10 +28,11 @@
 <script>
 import { db } from '@/firebase';
 import { collection, doc, onSnapshot, updateDoc, setDoc, getDoc } from 'firebase/firestore';
+import { getUniqueId } from '@/utils/uniqueId';
 
 export default {
   name: 'CDMNTable',
-  props: ['cdmnId', 'userId'],
+  props: ['cdmnId'],
   data() {
     return {
       columns: ['Name', 'Age', 'Salary'],
@@ -40,28 +41,31 @@ export default {
         Age: '',
         Salary: ''
       },
-      rows: []
+      rows: [],
+      uniqueId: getUniqueId()
     };
   },
   created() {
-    const sessionId = `${this.userId}_${this.cdmnId}`;
-    const cdmnDoc = doc(collection(db, 'cdmn'), sessionId);
-
-    onSnapshot(cdmnDoc, (doc) => {
-      if (doc.exists()) {
-        this.rows = doc.data().rows || [];
-      }
-    });
+    this.loadTable();
   },
   methods: {
+    async loadTable() {
+      const cdmnDoc = doc(collection(db, 'cdmn'), this.uniqueId);
+      onSnapshot(cdmnDoc, (doc) => {
+        if (doc.exists()) {
+          this.rows = doc.data().rows || [];
+        } else {
+          console.log('No such document!');
+        }
+      });
+    },
     async addRow() {
       if (!this.newRow.Name || !this.newRow.Age || !this.newRow.Salary) {
         alert('All fields are required');
         return;
       }
 
-      const sessionId = `${this.userId}_${this.cdmnId}`;
-      const cdmnDoc = doc(collection(db, 'cdmn'), sessionId);
+      const cdmnDoc = doc(collection(db, 'cdmn'), this.uniqueId);
 
       try {
         const docSnapshot = await getDoc(cdmnDoc);
@@ -70,28 +74,19 @@ export default {
         }
 
         const updatedRows = [...this.rows, this.newRow];
-        await updateDoc(cdmnDoc, {
-          rows: updatedRows
-        });
-        this.newRow = {
-          Name: '',
-          Age: '',
-          Salary: ''
-        };
+        await updateDoc(cdmnDoc, { rows: updatedRows });
+        this.newRow = { Name: '', Age: '', Salary: '' };
       } catch (error) {
         console.error('Error adding row:', error);
       }
     },
     async removeRow(index) {
-      const sessionId = `${this.userId}_${this.cdmnId}`;
-      const cdmnDoc = doc(collection(db, 'cdmn'), sessionId);
+      const cdmnDoc = doc(collection(db, 'cdmn'), this.uniqueId);
       const updatedRows = [...this.rows];
       updatedRows.splice(index, 1);
 
       try {
-        await updateDoc(cdmnDoc, {
-          rows: updatedRows
-        });
+        await updateDoc(cdmnDoc, { rows: updatedRows });
       } catch (error) {
         console.error('Error removing row:', error);
       }
