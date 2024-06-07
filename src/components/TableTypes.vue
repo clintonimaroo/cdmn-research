@@ -24,7 +24,7 @@
                 placeholder="Number of Columns" type="number" min="1" required /></td>
             <td><button type="submit">Add Table Type</button></td>
           </tr>
-          <tr v-for="(type, index) in tableTypes" :key="index">
+          <tr v-for="(type, index) in tableTypes" :key="type.id">
             <td @dblclick="enableEditing(index, 'name')">
               <template v-if="isEditing(index, 'name')">
                 <input v-model="editingData[index].name" @blur="saveEdit(index, 'name')"

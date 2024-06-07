@@ -16,7 +16,7 @@
             <td><input v-model="newColumnType.dataType" placeholder="Data Type" required /></td>
             <td><button type="submit">Add Column Type</button></td>
           </tr>
-          <tr v-for="(type, index) in columnTypes" :key="index">
+          <tr v-for="(type, index) in columnTypes" :key="type.id">
             <td @dblclick="enableEditing(index, 'name')">
               <template v-if="isEditing(index, 'name')">
                 <input v-model="editingData[index].name" @blur="saveEdit(index, 'name')"
