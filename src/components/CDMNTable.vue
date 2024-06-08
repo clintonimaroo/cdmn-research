@@ -15,9 +15,17 @@
             </td>
             <td><button type="submit" class="add-row-button">+</button></td>
           </tr>
-          <tr v-for="(row, index) in rows" :key="index">
-            <td v-for="column in columns" :key="column">{{ row[column] }}</td>
-            <td><button class="remove" @click="removeRow(index)">x</button></td>
+          <tr v-for="(row, rowIndex) in rows" :key="rowIndex">
+            <td v-for="(column, colIndex) in columns" :key="colIndex" @dblclick="enableEditing(rowIndex, column)">
+              <template v-if="isEditing(rowIndex, column)">
+                <input v-model="editingData[rowIndex][column]" @blur="saveEdit(rowIndex, column)"
+                  @keyup.enter="saveEdit(rowIndex, column)" />
+              </template>
+              <template v-else>
+                {{ row[column] }}
+              </template>
+            </td>
+            <td><button class="remove" @click="removeRow(rowIndex)">x</button></td>
           </tr>
         </tbody>
       </table>
@@ -40,7 +48,8 @@ export default {
         Age: '',
         Salary: ''
       },
-      rows: []
+      rows: [],
+      editingData: {}
     };
   },
   created() {
@@ -50,12 +59,36 @@ export default {
       if (doc.exists()) {
         console.log('Document data:', doc.data());
         this.rows = doc.data().rows || [];
+        this.resetEditingData();
       } else {
         console.log('No such document!');
       }
     });
   },
   methods: {
+    resetEditingData() {
+      this.editingData = this.rows.map(row => ({ ...row }));
+    },
+    isEditing(rowIndex, column) {
+      return this.editingData[rowIndex] && this.editingData[rowIndex][column] !== undefined;
+    },
+    enableEditing(rowIndex, column) {
+      this.$set(this.editingData, rowIndex, { ...this.rows[rowIndex] });
+      this.$set(this.editingData[rowIndex], column, this.rows[rowIndex][column]);
+    },
+    async saveEdit(rowIndex, column) {
+      const updatedRow = { ...this.rows[rowIndex], [column]: this.editingData[rowIndex][column] };
+      this.rows[rowIndex] = updatedRow;
+      const cdmnDoc = doc(collection(db, 'cdmn'), this.cdmnId);
+
+      try {
+        await updateDoc(cdmnDoc, { rows: this.rows });
+        this.$delete(this.editingData[rowIndex], column);
+        console.log('Field updated successfully');
+      } catch (error) {
+        console.error('Error updating field:', error);
+      }
+    },
     async addRow() {
       if (!this.newRow.Name || !this.newRow.Age || !this.newRow.Salary) {
         console.error('All fields are required');
@@ -112,23 +145,28 @@ export default {
 th {
   color: #333;
 }
+
 .column-even {
   background-color: #b5d7a8;
 }
+
 .column-odd {
   background-color: #cfe1f3;
 }
+
 table {
   width: 100%;
   border-collapse: collapse;
   margin-bottom: 20px;
 }
+
 th,
 td {
   padding: 10px;
   border: 1px solid #ccc;
   text-align: left;
 }
+
 td input {
   width: 100%;
   padding: 8px;
@@ -136,9 +174,11 @@ td input {
   border-radius: 3px;
   box-sizing: border-box;
 }
+
 tr:nth-child(even) td {
   background-color: #f9f9f9;
 }
+
 button {
   padding: 10px 20px;
   border: none;
@@ -148,6 +188,7 @@ button {
   cursor: pointer;
   margin: 10px 0;
 }
+
 td button {
   padding: 5px 10px;
   border: none;
@@ -160,6 +201,7 @@ td button {
   align-items: center;
   justify-content: center;
 }
+
 .add-row-button {
   padding: 5px 10px;
   border: none;
