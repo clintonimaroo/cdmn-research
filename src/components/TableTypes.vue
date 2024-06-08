@@ -114,6 +114,7 @@ export default {
     },
     async addTableType() {
       try {
+        console.log("Adding table type: ", this.newTableType);
         const docRef = await addDoc(collection(db, 'tableTypes'), this.newTableType);
         this.tableTypes.push({ id: docRef.id, ...this.newTableType });
         this.newTableType = { name: '', fixed: 'true', columns: '' };

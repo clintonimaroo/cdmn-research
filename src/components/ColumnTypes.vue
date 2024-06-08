@@ -76,6 +76,7 @@ export default {
     enableEditing(index, field) {
       this.$set(this.editingData, index, { ...this.columnTypes[index] });
       this.$set(this.editingData[index], field, this.columnTypes[index][field]);
+      console.log(`Editing enabled for index ${index} field ${field}`);
     },
     async saveEdit(index, field) {
       const updatedType = { ...this.columnTypes[index], [field]: this.editingData[index][field] };
@@ -92,6 +93,7 @@ export default {
     },
     async addColumnType() {
       try {
+        console.log("Adding column type: ", this.newColumnType);
         const docRef = await addDoc(collection(db, 'columnTypes'), this.newColumnType);
         this.columnTypes.push({ id: docRef.id, ...this.newColumnType });
         this.newColumnType = { name: '', dataType: '' };
