@@ -24,7 +24,7 @@
                 placeholder="Number of Columns" type="number" min="1" required /></td>
             <td><button type="submit">Add Table Type</button></td>
           </tr>
-          <tr v-for="(type, index) in tableTypes" :key="type.id">
+          <tr v-for="(type, index) in tableTypes" :key="index">
             <td @dblclick="enableEditing(index, 'name')">
               <template v-if="isEditing(index, 'name')">
                 <input v-model="editingData[index].name" @blur="saveEdit(index, 'name')"
@@ -78,9 +78,14 @@ export default {
     };
   },
   async created() {
-    const querySnapshot = await getDocs(collection(db, 'tableTypes'));
-    this.tableTypes = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-    this.resetEditingData();
+    try {
+      const querySnapshot = await getDocs(collection(db, 'tableTypes'));
+      this.tableTypes = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      this.resetEditingData();
+      console.log("Loaded table types: ", this.tableTypes);
+    } catch (error) {
+      console.error("Error loading table types: ", error);
+    }
   },
   methods: {
     resetEditingData() {
@@ -92,6 +97,7 @@ export default {
     enableEditing(index, field) {
       this.$set(this.editingData, index, { ...this.tableTypes[index] });
       this.$set(this.editingData[index], field, this.tableTypes[index][field]);
+      console.log(`Editing enabled for index ${index} field ${field}`);
     },
     async saveEdit(index, field) {
       const updatedType = { ...this.tableTypes[index], [field]: this.editingData[index][field] };
@@ -101,9 +107,9 @@ export default {
       try {
         await updateDoc(docRef, updatedType);
         this.$delete(this.editingData[index], field);
-        console.log('Field updated successfully');
+        console.log('Field updated successfully: ', updatedType);
       } catch (error) {
-        console.error('Error updating field:', error);
+        console.error('Error updating field: ', error);
       }
     },
     async addTableType() {
@@ -112,8 +118,9 @@ export default {
         this.tableTypes.push({ id: docRef.id, ...this.newTableType });
         this.newTableType = { name: '', fixed: 'true', columns: '' };
         this.resetEditingData();
+        console.log('Table type added successfully: ', this.tableTypes);
       } catch (error) {
-        console.error('Error adding table type:', error);
+        console.error('Error adding table type: ', error);
       }
     },
     async removeTableType(index) {
@@ -124,8 +131,9 @@ export default {
         await deleteDoc(docRef);
         this.tableTypes.splice(index, 1);
         this.resetEditingData();
+        console.log('Table type removed successfully: ', type);
       } catch (error) {
-        console.error('Error removing table type:', error);
+        console.error('Error removing table type: ', error);
       }
     }
   }

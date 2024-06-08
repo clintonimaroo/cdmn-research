@@ -16,7 +16,7 @@
             <td><input v-model="newColumnType.dataType" placeholder="Data Type" required /></td>
             <td><button type="submit">Add Column Type</button></td>
           </tr>
-          <tr v-for="(type, index) in columnTypes" :key="type.id">
+          <tr v-for="(type, index) in columnTypes" :key="index">
             <td @dblclick="enableEditing(index, 'name')">
               <template v-if="isEditing(index, 'name')">
                 <input v-model="editingData[index].name" @blur="saveEdit(index, 'name')"
@@ -57,9 +57,14 @@ export default {
     };
   },
   async created() {
-    const querySnapshot = await getDocs(collection(db, 'columnTypes'));
-    this.columnTypes = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-    this.resetEditingData();
+    try {
+      const querySnapshot = await getDocs(collection(db, 'columnTypes'));
+      this.columnTypes = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      this.resetEditingData();
+      console.log("Loaded column types: ", this.columnTypes);
+    } catch (error) {
+      console.error("Error loading column types: ", error);
+    }
   },
   methods: {
     resetEditingData() {
@@ -80,9 +85,9 @@ export default {
       try {
         await updateDoc(docRef, updatedType);
         this.$delete(this.editingData[index], field);
-        console.log('Field updated successfully');
+        console.log('Field updated successfully: ', updatedType);
       } catch (error) {
-        console.error('Error updating field:', error);
+        console.error('Error updating field: ', error);
       }
     },
     async addColumnType() {
@@ -91,8 +96,9 @@ export default {
         this.columnTypes.push({ id: docRef.id, ...this.newColumnType });
         this.newColumnType = { name: '', dataType: '' };
         this.resetEditingData();
+        console.log('Column type added successfully: ', this.columnTypes);
       } catch (error) {
-        console.error('Error adding column type:', error);
+        console.error('Error adding column type: ', error);
       }
     },
     async removeColumnType(index) {
@@ -103,8 +109,9 @@ export default {
         await deleteDoc(docRef);
         this.columnTypes.splice(index, 1);
         this.resetEditingData();
+        console.log('Column type removed successfully: ', type);
       } catch (error) {
-        console.error('Error removing column type:', error);
+        console.error('Error removing column type: ', error);
       }
     }
   }
