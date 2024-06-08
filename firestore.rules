@@ -1,0 +1,18 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /cdmn/{cdmnId} {
+      allow read, write: if true;
+    }
+    match /invitations/{invitationId} {
+      allow read, write: if true;
+    }
+    match /columnTypes/{columnTypeId} {
+      allow read, write: if true;
+    }
+    match /tableTypes/{tableTypeId} {
+      allow read, write: if true;
+    }
+  }
+}
