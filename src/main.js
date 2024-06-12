@@ -2,16 +2,18 @@ import { createApp } from 'vue';
 import App from './App.vue';
 import router from './router';
 import './assets/styles.css'; 
-import { v4 as uuidv4 } from 'uuid';
 
 const app = createApp(App);
 
-let userId = localStorage.getItem('userId');
-if (!userId) {
-    userId = uuidv4(); 
-    localStorage.setItem('userId', userId);
+function getUserId() {
+    let userId = localStorage.getItem('userId');
+    if (!userId) {
+        userId = Math.random().toString(36).substr(2, 9);
+        localStorage.setItem('userId', userId);
+    }
+    return userId;
 }
 
-app.config.globalProperties.$userId = userId;
+app.config.globalProperties.$userId = getUserId();
 
 app.use(router).mount('#app');

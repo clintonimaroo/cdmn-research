@@ -39,7 +39,6 @@ import { collection, doc, onSnapshot, updateDoc, setDoc, getDoc } from 'firebase
 
 export default {
   name: 'CDMNTable',
-  props: ['cdmnId'],
   data() {
     return {
       columns: ['Name', 'Age', 'Salary'],
@@ -53,7 +52,8 @@ export default {
     };
   },
   created() {
-    const cdmnDoc = doc(collection(db, 'cdmn'), this.cdmnId);
+    const userId = this.$root.$userId;
+    const cdmnDoc = doc(collection(db, 'cdmn'), userId);
 
     onSnapshot(cdmnDoc, (doc) => {
       if (doc.exists()) {
@@ -79,7 +79,8 @@ export default {
     async saveEdit(rowIndex, column) {
       const updatedRow = { ...this.rows[rowIndex], [column]: this.editingData[rowIndex][column] };
       this.rows[rowIndex] = updatedRow;
-      const cdmnDoc = doc(collection(db, 'cdmn'), this.cdmnId);
+      const userId = this.$root.$userId;
+      const cdmnDoc = doc(collection(db, 'cdmn'), userId);
 
       try {
         await updateDoc(cdmnDoc, { rows: this.rows });
@@ -96,7 +97,8 @@ export default {
         return;
       }
 
-      const cdmnDoc = doc(collection(db, 'cdmn'), this.cdmnId);
+      const userId = this.$root.$userId;
+      const cdmnDoc = doc(collection(db, 'cdmn'), userId);
 
       try {
         const docSnapshot = await getDoc(cdmnDoc);
@@ -120,7 +122,8 @@ export default {
       }
     },
     async removeRow(index) {
-      const cdmnDoc = doc(collection(db, 'cdmn'), this.cdmnId);
+      const userId = this.$root.$userId;
+      const cdmnDoc = doc(collection(db, 'cdmn'), userId);
       const updatedRows = [...this.rows];
       updatedRows.splice(index, 1);
 
