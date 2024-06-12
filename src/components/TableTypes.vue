@@ -78,8 +78,9 @@ export default {
     };
   },
   async created() {
+    const userId = this.$root.$userId;
     try {
-      const querySnapshot = await getDocs(collection(db, 'tableTypes'));
+      const querySnapshot = await getDocs(collection(db, 'users', userId, 'tableTypes'));
       this.tableTypes = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       this.resetEditingData();
       console.log("Loaded table types: ", this.tableTypes);
@@ -92,9 +93,6 @@ export default {
       this.editingData = this.tableTypes.map(type => ({ ...type }));
     },
     isEditing(index, field) {
-      return this.editingData[index] && this.editingData[index][field] !== undefined;
-    },
-    enableEditing(index, field) {
       this.$set(this.editingData, index, { ...this.tableTypes[index] });
       this.$set(this.editingData[index], field, this.tableTypes[index][field]);
       console.log(`Editing enabled for index ${index} field ${field}`);

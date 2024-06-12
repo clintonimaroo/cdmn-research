@@ -45,7 +45,7 @@
 
 <script>
 import { db } from '@/firebase';
-import { collection, addDoc, getDocs, deleteDoc, doc, updateDoc } from 'firebase/firestore';
+import { collection, addDoc, getDocs, deleteDoc, doc, updateDoc, query, where } from 'firebase/firestore';
 
 export default {
   name: 'ColumnTypes',
@@ -58,7 +58,9 @@ export default {
   },
   async created() {
     try {
-      const querySnapshot = await getDocs(collection(db, 'columnTypes'));
+      const userId = this.$root.$userId;
+      const q = query(collection(db, 'columnTypes'), where('userId', '==', userId));
+      const querySnapshot = await getDocs(q);
       this.columnTypes = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       this.resetEditingData();
       console.log("Loaded column types: ", this.columnTypes);
@@ -93,9 +95,10 @@ export default {
     },
     async addColumnType() {
       try {
+        const userId = this.$root.$userId;
         console.log("Adding column type: ", this.newColumnType);
-        const docRef = await addDoc(collection(db, 'columnTypes'), this.newColumnType);
-        this.columnTypes.push({ id: docRef.id, ...this.newColumnType });
+        const docRef = await addDoc(collection(db, 'columnTypes'), { ...this.newColumnType, userId });
+        this.columnTypes.push({ id: docRef.id, ...this.newColumnType, userId });
         this.newColumnType = { name: '', dataType: '' };
         this.resetEditingData();
         console.log('Column type added successfully: ', this.columnTypes);
