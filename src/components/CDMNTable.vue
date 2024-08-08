@@ -92,8 +92,8 @@ export default {
     },
     async addRow() {
       if (!this.newRow.Name || !this.newRow.Age || !this.newRow.Salary) {
-        console.error('All fields are required');
-        alert('All fields are required');
+        console.error('All fields are required!');
+        alert('All fields are required!');
         return;
       }
 
