@@ -81,8 +81,5 @@ export default {
 </script>
 
 <style>
-.bmc-button-container {
-  margin-top: 20px;
-  text-align: center;
-}
+
 </style>

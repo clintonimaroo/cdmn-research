@@ -191,6 +191,17 @@ footer {
     overflow-y: auto;
 }
 
+.peek-view .bmc-button-container {
+    display: block;
+    text-align: center;
+    margin-top: 20px;
+}
+
+.bmc-button-container {
+    margin-top: 20px;
+    text-align: center;
+}
+
 .invite-button {
     padding: 10px 20px;
     border-radius: 30px;
