@@ -15,7 +15,15 @@
       <router-view :cdmnId="currentCDMNId"></router-view>
     </div>
     <footer>
-      SmartKlass™️ | All Rights Reserved | Copyright 2024
+      <div>
+        SmartKlass™️ | All Rights Reserved | Copyright 2024
+      </div>
+      <div>
+        <script type="text/javascript" src="https://cdnjs.buymeacoffee.com/1.0.0/button.prod.min.js"
+          data-name="bmc-button" data-slug="afrostream2" data-color="#FFDD00" data-emoji="🍵" data-font="Cookie"
+          data-text="Buy me a tea" data-outline-color="#000000" data-font-color="#000000"
+          data-coffee-color="#ffffff"></script>
+      </div>
     </footer>
     <div v-if="showPeekView" class="peek-view-overlay" @click="closePeekView">
       <div class="peek-view" @click.stop>
@@ -57,7 +65,7 @@ export default {
       localStorage.setItem('cdmnId', storedID);
     }
     this.currentCDMNId = storedID;
-    console.log('Current CDMN ID:', this.currentCDMNId); 
+    console.log('Current CDMN ID:', this.currentCDMNId);
   },
   methods: {
     closePeekView() {
@@ -74,4 +82,5 @@ export default {
 </script>
 
 <style>
+/* Add your styles here */
 </style>
