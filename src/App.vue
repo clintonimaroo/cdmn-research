@@ -23,13 +23,8 @@
         <p>CDMN (Custom Decision Model and Notation) is a table format that allows you to describe knowledge about a
           certain domain. This knowledge can then be used to carry out various types of reasoning. It is particularly
           useful for defining and working with rules and logic in a structured manner.</p>
-        <!-- Buy Me a Coffee Button -->
-        <div class="bmc-button-container">
-          <script type="text/javascript" src="https://cdnjs.buymeacoffee.com/1.0.0/button.prod.min.js"
-            data-name="bmc-button" data-slug="afrostream2" data-color="#FFDD00" data-emoji="🍵" data-font="Cookie"
-            data-text="Buy me a tea" data-outline-color="#000000" data-font-color="#000000"
-            data-coffee-color="#ffffff"></script>
-        </div>
+        <!-- Container for Buy Me a Coffee Button -->
+        <div id="bmc-container"></div>
         <button class="close-button" @click="closePeekView">×</button>
       </div>
     </div>
@@ -66,12 +61,30 @@ export default {
     this.currentCDMNId = storedID;
     console.log('Current CDMN ID:', this.currentCDMNId);
   },
+  mounted() {
+    this.loadBuyMeCoffeeButton();
+  },
   methods: {
     closePeekView() {
       this.showPeekView = false;
     },
     closeInvite() {
       this.showInvite = false;
+    },
+    loadBuyMeCoffeeButton() {
+      const script = document.createElement('script');
+      script.src = "https://cdnjs.buymeacoffee.com/1.0.0/button.prod.min.js";
+      script.setAttribute('data-name', 'bmc-button');
+      script.setAttribute('data-slug', 'afrostream2');
+      script.setAttribute('data-color', '#FFDD00');
+      script.setAttribute('data-emoji', '🍵');
+      script.setAttribute('data-font', 'Cookie');
+      script.setAttribute('data-text', 'Buy me a tea');
+      script.setAttribute('data-outline-color', '#000000');
+      script.setAttribute('data-font-color', '#000000');
+      script.setAttribute('data-coffee-color', '#ffffff');
+      
+      document.getElementById('bmc-container').appendChild(script);
     }
   },
   components: {
@@ -81,5 +94,5 @@ export default {
 </script>
 
 <style>
-
+/* Add any necessary styles here */
 </style>
