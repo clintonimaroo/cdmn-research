@@ -15,15 +15,7 @@
       <router-view :cdmnId="currentCDMNId"></router-view>
     </div>
     <footer>
-      <div>
-        SmartKlass™️ | All Rights Reserved | Copyright 2024
-      </div>
-      <div>
-        <script type="text/javascript" src="https://cdnjs.buymeacoffee.com/1.0.0/button.prod.min.js"
-          data-name="bmc-button" data-slug="afrostream2" data-color="#FFDD00" data-emoji="🍵" data-font="Cookie"
-          data-text="Buy me a tea" data-outline-color="#000000" data-font-color="#000000"
-          data-coffee-color="#ffffff"></script>
-      </div>
+      SmartKlass™️ | All Rights Reserved | Copyright 2024
     </footer>
     <div v-if="showPeekView" class="peek-view-overlay" @click="closePeekView">
       <div class="peek-view" @click.stop>
@@ -31,6 +23,13 @@
         <p>CDMN (Custom Decision Model and Notation) is a table format that allows you to describe knowledge about a
           certain domain. This knowledge can then be used to carry out various types of reasoning. It is particularly
           useful for defining and working with rules and logic in a structured manner.</p>
+        <!-- Buy Me a Coffee Button -->
+        <div class="bmc-button-container">
+          <script type="text/javascript" src="https://cdnjs.buymeacoffee.com/1.0.0/button.prod.min.js"
+            data-name="bmc-button" data-slug="afrostream2" data-color="#FFDD00" data-emoji="🍵" data-font="Cookie"
+            data-text="Buy me a tea" data-outline-color="#000000" data-font-color="#000000"
+            data-coffee-color="#ffffff"></script>
+        </div>
         <button class="close-button" @click="closePeekView">×</button>
       </div>
     </div>
@@ -82,5 +81,42 @@ export default {
 </script>
 
 <style>
-/* Add your styles here */
+/* Add your existing styles here */
+
+/* Peek view styles */
+.peek-view-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.peek-view {
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 600px;
+  position: relative;
+}
+
+.close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.bmc-button-container {
+  margin-top: 20px;
+  text-align: center;
+}
 </style>
