@@ -83,7 +83,7 @@ export default {
       script.setAttribute('data-outline-color', '#000000');
       script.setAttribute('data-font-color', '#000000');
       script.setAttribute('data-coffee-color', '#ffffff');
-      
+
       document.getElementById('bmc-container').appendChild(script);
     }
   },
@@ -94,5 +94,4 @@ export default {
 </script>
 
 <style>
-/* Add any necessary styles here */
 </style>
