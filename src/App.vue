@@ -15,11 +15,11 @@
       <router-view :cdmnId="currentCDMNId"></router-view>
     </div>
     <footer>
-      Clinton Imaro © 2024 • All Rights Reserved
-    </footer>
-    <footer>
-      built by <a href="https://www.linkedin.com/in/clintonimaro/" target="_blank" rel="noopener noreferrer">Clinton
-        Imaro</a>
+      Clinton Imaro © 2024 • All Rights Reserved &nbsp;|&nbsp; built by
+      <a href="https://www.linkedin.com/in/clintonimaro/" target="_blank" rel="noopener noreferrer">
+        Clinton Imaro
+        <img src="https://i.postimg.cc/HLPkM9mX/IMG-0535.jpg" alt="Clinton Imaro" class="footer-image" />
+      </a>
     </footer>
     <div v-if="showPeekView" class="peek-view-overlay" @click="closePeekView">
       <div class="peek-view" @click.stop>
