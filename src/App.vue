@@ -14,12 +14,30 @@
     <div class="container">
       <router-view :cdmnId="currentCDMNId"></router-view>
     </div>
-    <footer>
-      Clinton Imaro © 2024 • All Rights Reserved &nbsp;|&nbsp; built by
-      <a href="https://www.linkedin.com/in/clintonimaro/" target="_blank" rel="noopener noreferrer">
-        Clinton Imaro
-        <img src="https://i.postimg.cc/HLPkM9mX/IMG-0535.jpg" alt="Clinton Imaro" class="footer-image" />
-      </a>
+    <footer class="footer-text">
+      Clinton Imaro © 2024 • All Rights Reserved
+      <span class="hover-effect" style="margin-left: 30px;">
+        Designed by
+        <a href="https://x.com/IHarbaty" target="_blank" class="hover-effect-link" id="samuel-link">
+          Samuel,
+        </a>
+      </span>
+      <span class="hover-effect">
+        built by
+        <a href="https://x.com/clintonimaroo" target="_blank" class="hover-effect-link" id="clinton-link">
+          Clinton
+        </a>
+      </span>
+      <div class="image-container">
+        <img src="https://i.postimg.cc/JhY8s78h/Ellipse-82.png" alt="Samuel" id="samuel-image"
+          class="footer-image small-image" />
+        <div class="tooltip" id="samuel-tooltip">Hey, it's me Samuel! Check me out!</div>
+      </div>
+      <div class="image-container">
+        <img src="https://i.postimg.cc/pLVpwTXG/Ellipse-82.png" alt="Clinton" id="clinton-image"
+          class="footer-image small-image" />
+        <div class="tooltip" id="clinton-tooltip">Hola, it's me Clinton! Check me out!</div>
+      </div>
     </footer>
     <div v-if="showPeekView" class="peek-view-overlay" @click="closePeekView">
       <div class="peek-view" @click.stop>
@@ -98,4 +116,61 @@ export default {
 </script>
 
 <style>
+.footer-text {
+  color: #878787;
+}
+
+.hover-effect:hover {
+  color: black;
+}
+
+.hover-effect-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.image-container {
+  display: inline-block;
+  position: relative;
+  margin-left: 0px;
+}
+
+.tooltip {
+  display: none;
+  position: absolute;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #333;
+  color: #fff;
+  padding: 10px 15px;
+  border-radius: 8px;
+  white-space: nowrap;
+  z-index: 10;
+  font-size: 14px;
+  opacity: 0;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.image-container:hover .tooltip {
+  display: block;
+  opacity: 1;
+  transform: translate(-50%, -10px);
+}
+
+.image-container:hover img {
+  transform: scale(1.1);
+  transition: transform 0.3s ease;
+}
+
+.footer-image.small-image {
+  width: 20px;
+  height: 20px;
+  vertical-align: middle;
+  border-radius: inherit;
+  object-position: center;
+  margin-left: 2px;
+  /* Adjust margin between text and image */
+}
 </style>
