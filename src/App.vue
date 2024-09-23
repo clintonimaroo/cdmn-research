@@ -15,7 +15,10 @@
       <router-view :cdmnId="currentCDMNId"></router-view>
     </div>
     <footer>
-      SmartKlass™️ | All Rights Reserved | Copyright 2024
+      Hogent | All Rights Reserved | Copyright 2024
+    </footer>
+    <footer>
+      built with <a href="https://vuejs.org/" target="_blank" rel="noopener noreferrer">Vue.js</a> and
     </footer>
     <div v-if="showPeekView" class="peek-view-overlay" @click="closePeekView">
       <div class="peek-view" @click.stop>
