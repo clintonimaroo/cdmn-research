@@ -31,12 +31,22 @@
       <div class="image-container">
         <img src="https://i.postimg.cc/JhY8s78h/Ellipse-82.png" alt="Samuel" id="samuel-image"
           class="footer-image small-image" />
-        <div class="tooltip" id="samuel-tooltip">Hey, it's me Samuel! Check me out!</div>
+        <div class="tooltip" id="samuel-tooltip">
+          <img src="https://i.postimg.cc/3rPQPJYX/Spotify-Primary-Logo-RGB-Green.png" alt="Spotify"
+            class="spotify-logo" />
+          I'm listening to 🎧: <a href="https://open.spotify.com/album/23csADVrKk0TsKL5z9tqEh" target="_blank"
+            class="tooltip-link hover-effect-link">Are You Listening? by Taves</a>
+        </div>
       </div>
       <div class="image-container">
         <img src="https://i.postimg.cc/pLVpwTXG/Ellipse-82.png" alt="Clinton" id="clinton-image"
           class="footer-image small-image" />
-        <div class="tooltip" id="clinton-tooltip">Hola, it's me Clinton! Check me out!</div>
+        <div class="tooltip" id="clinton-tooltip">
+          <img src="https://i.postimg.cc/3rPQPJYX/Spotify-Primary-Logo-RGB-Green.png" alt="Spotify"
+            class="spotify-logo" />
+          I'm listening to 🎧: <a href="https://open.spotify.com/album/23csADVrKk0TsKL5z9tqEh" target="_blank"
+            class="tooltip-link hover-effect-link">Lungu Boy by Asake</a>
+        </div>
       </div>
     </footer>
     <div v-if="showPeekView" class="peek-view-overlay" @click="closePeekView">
@@ -171,6 +181,12 @@ export default {
   border-radius: inherit;
   object-position: center;
   margin-left: 2px;
-  /* Adjust margin between text and image */
+}
+
+.spotify-logo {
+  width: 16px;
+  height: 16px;
+  vertical-align: middle;
+  margin-right: 5px;
 }
 </style>
