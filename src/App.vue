@@ -18,7 +18,8 @@
       Hogent | All Rights Reserved | Copyright 2024
     </footer>
     <footer>
-      built with <a href="https://vuejs.org/" target="_blank" rel="noopener noreferrer">Vue.js</a> and
+      built with <a href="https://www.linkedin.com/in/clintonimaro/" target="_blank" rel="noopener noreferrer">Clinton
+        Imaro</a>
     </footer>
     <div v-if="showPeekView" class="peek-view-overlay" @click="closePeekView">
       <div class="peek-view" @click.stop>
