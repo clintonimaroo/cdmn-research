@@ -14,7 +14,8 @@
     <div class="container">
       <router-view :cdmnId="currentCDMNId"></router-view>
     </div>
-    <footer class="footer-text">
+    <footer class="footer-text"
+      style="--font-selector: Q1VTVE9NO1NGIFBybyBSb3VuZGVkIFJlZ3VsYXI=; --framer-font-family: 'SF Pro Rounded Regular', 'SF Pro Rounded Regular Placeholder', -apple-system, BlinkMacSystemFont, sans-serif; --framer-font-size: 14px; --framer-text-color: rgba(110, 110, 110, 0.6);">
       Clinton Imaro © 2024 • All Rights Reserved
       <span class="hover-effect" style="margin-left: 30px;">
         Designed by
@@ -55,7 +56,6 @@
         <p>CDMN (Custom Decision Model and Notation) is a table format that allows you to describe knowledge about a
           certain domain. This knowledge can then be used to carry out various types of reasoning. It is particularly
           useful for defining and working with rules and logic in a structured manner.</p>
-        <!-- Container for Buy Me a Coffee Button -->
         <div id="bmc-container"></div>
         <button class="close-button" @click="closePeekView">×</button>
       </div>
@@ -103,21 +103,9 @@ export default {
     closeInvite() {
       this.showInvite = false;
     },
-    loadBuyMeCoffeeButton() {
-      const script = document.createElement('script');
-      script.src = "https://cdnjs.buymeacoffee.com/1.0.0/button.prod.min.js";
-      script.setAttribute('data-name', 'bmc-button');
-      script.setAttribute('data-slug', 'afrostream2');
-      script.setAttribute('data-color', '#FFDD00');
-      script.setAttribute('data-emoji', '🍵');
-      script.setAttribute('data-font', 'Cookie');
-      script.setAttribute('data-text', 'Buy me a tea');
-      script.setAttribute('data-outline-color', '#000000');
-      script.setAttribute('data-font-color', '#000000');
-      script.setAttribute('data-coffee-color', '#ffffff');
-
-      document.getElementById('bmc-container').appendChild(script);
-    }
+    toggleTheme() {
+      document.body.classList.toggle('dark-mode');
+    },
   },
   components: {
     InviteCollaborator

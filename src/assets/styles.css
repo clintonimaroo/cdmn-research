@@ -254,3 +254,12 @@ footer {
     cursor: pointer;
     color: #000;
 }
+
+body.dark-mode {
+    background-color: #121212;
+    color: #ffffff;
+}
+
+body.dark-mode .footer-text {
+    color: #e0e0e0;
+}
