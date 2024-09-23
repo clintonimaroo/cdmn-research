@@ -15,10 +15,10 @@
       <router-view :cdmnId="currentCDMNId"></router-view>
     </div>
     <footer>
-      Hogent | All Rights Reserved | Copyright 2024
+      Clinton Imaro © 2024 • All Rights Reserved
     </footer>
     <footer>
-      built with <a href="https://www.linkedin.com/in/clintonimaro/" target="_blank" rel="noopener noreferrer">Clinton
+      built by <a href="https://www.linkedin.com/in/clintonimaro/" target="_blank" rel="noopener noreferrer">Clinton
         Imaro</a>
     </footer>
     <div v-if="showPeekView" class="peek-view-overlay" @click="closePeekView">
