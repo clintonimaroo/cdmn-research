@@ -13,6 +13,8 @@
     "date-fns": "^3.6.0",
     "dotenv": "^16.4.5",
     "firebase": "^10.12.2",
+    "framer": "^2.4.1",
+    "framer-motion": "^11.5.6",
     "resend": "^3.2.0",
     "vue": "^3.4.27",
     "vue-router": "^4.3.2"

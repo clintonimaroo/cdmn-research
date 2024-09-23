@@ -14,8 +14,7 @@
     <div class="container">
       <router-view :cdmnId="currentCDMNId"></router-view>
     </div>
-    <footer class="footer-text"
-      style="--font-selector: Q1VTVE9NO1NGIFBybyBSb3VuZGVkIFJlZ3VsYXI=; --framer-font-family: 'SF Pro Rounded Regular', 'SF Pro Rounded Regular Placeholder', -apple-system, BlinkMacSystemFont, sans-serif; --framer-font-size: 14px; --framer-text-color: rgba(110, 110, 110, 0.6);">
+    <footer class="footer-text">
       Clinton Imaro © 2024 • All Rights Reserved
       <span class="hover-effect" style="margin-left: 30px;">
         Designed by
@@ -94,7 +93,6 @@ export default {
     console.log('Current CDMN ID:', this.currentCDMNId);
   },
   mounted() {
-    this.loadBuyMeCoffeeButton();
   },
   methods: {
     closePeekView() {
@@ -114,21 +112,13 @@ export default {
 </script>
 
 <style>
-.footer-text {
-  color: #878787;
-}
-
-.hover-effect:hover {
-  color: black;
-}
-
-.hover-effect-link {
-  color: inherit;
-  text-decoration: none;
-}
 
 .image-container {
   display: inline-block;
+  -webkit-font-smoothing: inherit;
+  transform-origin: 50% 50% 0px;
+  transform: none;
+  overflow: visible;
   position: relative;
   margin-left: 0px;
 }
@@ -168,6 +158,7 @@ export default {
   vertical-align: middle;
   border-radius: inherit;
   object-position: center;
+  -webkit-font-smoothing: inherit;
   margin-left: 2px;
 }
 

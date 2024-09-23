@@ -263,3 +263,41 @@ body.dark-mode {
 body.dark-mode .footer-text {
     color: #e0e0e0;
 }
+
+.footer-text {
+    color: var(--framer-text-color, #6e6e6e);
+    font-family: var(--framer-font-family, "SF Pro Rounded Regular", "SF Pro Rounded Regular Placeholder", "-apple-system", "BlinkMacSystemFont", sans-serif);
+    font-size: var(--framer-font-size, 14px);
+    font-weight: var(--framer-font-weight, 400);
+    font-style: var(--framer-font-style, normal);
+    line-height: var(--framer-line-height, 1.2em);
+    letter-spacing: var(--framer-letter-spacing, 0);
+    text-align: var(--framer-text-alignment, center);
+    margin: 10;
+    padding: 0;
+    letter-spacing: var(--framer-blockquote-letter-spacing, var(--framer-letter-spacing, 0));
+    line-height: var(--framer-blockquote-line-height, var(--framer-line-height, 1.2em));
+    -webkit-text-stroke-width: var(--framer-text-stroke-width, initial);
+    -webkit-text-stroke-color: var(--framer-text-stroke-color, initial);
+    font-feature-settings: var(--framer-font-open-type-features, initial);
+    text-wrap: var(--framer-text-wrap-override, var(--framer-text-wrap));
+    box-sizing: border-box;
+    -webkit-font-smoothing: inherit;
+}
+
+
+.hover-effect:hover {
+    font-family: var(--framer-link-hover-font-family, var(--framer-blockquote-font-family, var(--framer-link-font-family, var(--framer-font-family, Inter, sans-serif))));
+    font-style: var(--framer-link-hover-font-style, var(--framer-blockquote-font-style, var(--framer-link-font-style, var(--framer-font-style, normal))));
+    font-weight: var(--framer-link-hover-font-weight, var(--framer-blockquote-font-weight, var(--framer-link-font-weight, var(--framer-font-weight, 400))));
+    color: var(--framer-link-hover-text-color, var(--framer-blockquote-text-color, var(--framer-link-text-color, var(--framer-text-color, #000))));
+    font-size: calc(var(--framer-link-hover-font-size, var(--framer-blockquote-font-size, var(--framer-font-size, 16px))) * var(--framer-font-size-scale, 1));
+    text-transform: var(--framer-link-hover-text-transform, var(--framer-blockquote-text-transform, var(--framer-link-text-transform, var(--framer-text-transform, none))));
+    text-decoration: var(--framer-link-hover-text-decoration, var(--framer-blockquote-text-decoration, var(--framer-link-text-decoration, var(--framer-text-decoration, none))));
+    transition: color 0.3s ease;
+}
+
+.hover-effect-link {
+    color: inherit;
+    text-decoration: none;
+}
