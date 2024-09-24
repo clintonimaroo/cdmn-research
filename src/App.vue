@@ -16,7 +16,7 @@
     </div>
     <footer class="footer-text">
       Clinton Imaro © 2024 • All Rights Reserved
-      <span class="hover-effect" style="margin-left: 30px;">
+      <span class="hover-effect" style="margin-left: 31px;">
         Inspired by
         <a href="https://x.com/IHarbaty" target="_blank" class="hover-effect-link" id="samuel-link">
           Samuel,
