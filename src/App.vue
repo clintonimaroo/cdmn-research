@@ -153,8 +153,8 @@ export default {
 }
 
 .footer-image.small-image {
-  width: 20px;
-  height: 20px;
+  width: 25px;
+  height: 25px;
   vertical-align: middle;
   border-radius: inherit;
   object-position: center;
