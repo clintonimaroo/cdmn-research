@@ -5,7 +5,7 @@
         <div v-for="(column, index) in columns" :key="index">
           <input v-model="newRow[column]" :placeholder="column" />
         </div>
-        <button type="submit">Add Row</button>
+        <button type="submit">Add Row </button>
       </form>
     </div>
   </template>
